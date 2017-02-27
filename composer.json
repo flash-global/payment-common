@@ -1,0 +1,37 @@
+{
+    "name": "fei/payment-common",
+    "description": "Flash applicative payment - common components",
+    "type": "library",
+    "keywords": [
+        "payment"
+    ],
+    "authors": [
+        {
+            "name": "Anaëlle Baumann",
+            "email": "aba@opcoding.eu",
+            "role": "dev"
+        },
+        {
+            "name": "Boris Cerati",
+            "email": "bce@opcoding.eu",
+            "role": "dev"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://composer.flash-global.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Fei\\Service\\Payment\\": "src"
+        }
+    },
+    "require": {
+        "fei/entities": "^1.0.3"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.2"
+    }
+}
