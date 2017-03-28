@@ -30,7 +30,10 @@
     },
     "require": {
         "fei/entities": "^1.0.3",
-        "doctrine/common": "^2.7"
+        "doctrine/common": "^2.7",
+        "zendframework/zend-hydrator": "^2.2",
+        "zendframework/zend-filter": "^2.7",
+        "zendframework/zend-servicemanager": "^3.3"
     },
     "require-dev": {
         "codeception/codeception": "^2.2"
