@@ -179,6 +179,7 @@ class PaymentTest extends Unit
                 Payment::STATUS_REJECTED,
                 Payment::STATUS_AUTHORIZED,
                 Payment::STATUS_REFUSED,
+                Payment::STATUS_OUTDATED,
                 Payment::STATUS_ERRORED,
                 Payment::STATUS_SETTLED
             ),

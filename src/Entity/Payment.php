@@ -17,20 +17,21 @@ use Ramsey\Uuid\Uuid;
  */
 class Payment extends AbstractEntity
 {
-    /* Payment statuses */
+    // Payment statuses
     const STATUS_PENDING    = 1;
     const STATUS_AUTHORIZED = 2;
     const STATUS_SETTLED    = 3;
     const STATUS_CANCELLED  = -1;
     const STATUS_REJECTED   = -2;
     const STATUS_REFUSED    = -3;
-    const STATUS_ERRORED    = -4;
+    const STATUS_OUTDATED   = -4;
+    const STATUS_ERRORED    = -5;
 
-    /* Payment authorized bridges */
+    // Authorized payment flags
     const PAYMENT_PAYPAL = 1;
     const PAYMENT_CB     = 2;
 
-    /* Payment callback URL key */
+    // Payment callback URL key
     const CALLBACK_URL_SUCCEEDED = "succeeded";
     const CALLBACK_URL_FAILED    = "failed";
     const CALLBACK_URL_SAVED     = "saved";
@@ -67,6 +68,13 @@ class Payment extends AbstractEntity
     protected $payedAt;
 
     /**
+     * @var \DateTime
+     *
+     * @Column(type="datetime")
+     */
+    protected $expirationDate;
+
+    /**
      * @var int
      *
      * @Column(type="integer")
@@ -99,7 +107,7 @@ class Payment extends AbstractEntity
     /**
      * @var array
      *
-     * @Column(type="json")
+     * @Column(type="integer")
      *
      * See const PAYMENT_XXX for possible values
      */
@@ -108,7 +116,7 @@ class Payment extends AbstractEntity
     /**
      * @var int
      *
-     * @Column(type="int", nullable=true)
+     * @Column(type="integer", nullable=true)
      *
      * See const PAYMENT_XXX for possible values
      */
@@ -124,7 +132,7 @@ class Payment extends AbstractEntity
     /**
      * @var array
      *
-     * @Column(type="json")
+     * @Column(type="array")
      */
     protected $callbackUrl;
 
@@ -219,6 +227,30 @@ class Payment extends AbstractEntity
     public function setPayedAt($payedAt)
     {
         $this->payedAt = $payedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get ExpirationDate
+     *
+     * @return \DateTime
+     */
+    public function getExpirationDate()
+    {
+        return $this->expirationDate;
+    }
+
+    /**
+     * Set ExpirationDate
+     *
+     * @param \DateTime $expirationDate
+     *
+     * @return $this
+     */
+    public function setExpirationDate($expirationDate)
+    {
+        $this->expirationDate = $expirationDate;
 
         return $this;
     }
@@ -387,7 +419,7 @@ class Payment extends AbstractEntity
      *
      * @return Payment
      */
-    public function setCallbackUrl($callbackUrl)
+    public function setCallbackUrl(array $callbackUrl)
     {
         $this->callbackUrl = $callbackUrl;
 
@@ -424,17 +456,16 @@ class Payment extends AbstractEntity
      */
     public static function getStatuses()
     {
-        $statuses = [
+        return [
             Payment::STATUS_PENDING,
             Payment::STATUS_CANCELLED,
             Payment::STATUS_REJECTED,
             Payment::STATUS_AUTHORIZED,
             Payment::STATUS_REFUSED,
+            Payment::STATUS_OUTDATED,
             Payment::STATUS_ERRORED,
             Payment::STATUS_SETTLED
         ];
-
-        return $statuses;
     }
 
     /**
@@ -442,12 +473,10 @@ class Payment extends AbstractEntity
      */
     public static function getPaymentBridges()
     {
-        $paymentBridges = [
+        return [
             Payment::PAYMENT_PAYPAL,
             Payment::PAYMENT_CB
         ];
-
-        return $paymentBridges;
     }
 
     /**
@@ -455,13 +484,11 @@ class Payment extends AbstractEntity
      */
     public static function getCallbackUrlEvents()
     {
-        $callbackUrlEvents = [
+        return [
             Payment::CALLBACK_URL_SUCCEEDED,
             Payment::CALLBACK_URL_FAILED,
             Payment::CALLBACK_URL_SAVED,
             Payment::CALLBACK_URL_CANCELED
         ];
-
-        return $callbackUrlEvents;
     }
 }
