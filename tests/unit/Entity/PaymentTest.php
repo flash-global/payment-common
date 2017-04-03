@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Entity\Validator\Exception;
 use Fei\Service\Payment\Entity\Context;
 use Fei\Service\Payment\Entity\Payment;
+use Ramsey\Uuid\Uuid;
 
 class PaymentTest extends Unit
 {
@@ -20,15 +21,15 @@ class PaymentTest extends Unit
         $this->assertEquals(1, $payment->getId());
     }
 
-    public function testUidAccessors()
+    public function testUuidAccessors()
     {
         $payment = new Payment();
-        $uid     = uniqid('', true);
-        $result  = $payment->setUid($uid);
+        $uuid = (Uuid::uuid4())->toString();
+        $result  = $payment->setUuid($uuid);
         $this->assertInstanceOf(Payment::class, $result);
 
-        $this->assertAttributeEquals($payment->getUid(), 'uid', $payment);
-        $this->assertEquals($uid, $payment->getUid());
+        $this->assertAttributeEquals($payment->getUuid(), 'uuid', $payment);
+        $this->assertEquals($uuid, $payment->getUuid());
     }
 
     public function testCreatedAtAccessors()
@@ -97,29 +98,29 @@ class PaymentTest extends Unit
         $this->assertEquals($price, $payment->getCapturedPrice());
     }
 
-    public function testAuthorizedPaymentBridgesAccessors()
+    public function testAuthorizedPaymentAccessors()
     {
         $payment = new Payment();
         $bridges = array(
             Payment::PAYMENT_PAYPAL,
             Payment::PAYMENT_CB
         );
-        $result  = $payment->setAuthorizedPaymentBridges($bridges);
+        $result  = $payment->setAuthorizedPayment($bridges);
         $this->assertInstanceOf(Payment::class, $result);
 
-        $this->assertAttributeEquals($payment->getAuthorizedPaymentBridges(), 'authorizedPaymentBridges', $payment);
-        $this->assertEquals($bridges, $payment->getAuthorizedPaymentBridges());
+        $this->assertAttributeEquals($payment->getAuthorizedPayment(), 'authorizedPayment', $payment);
+        $this->assertEquals($bridges, $payment->getAuthorizedPayment());
     }
 
-    public function testSelectedPaymentBridgeAccessors()
+    public function testSelectedPaymentAccessors()
     {
         $payment        = new Payment();
         $selectedBridge = Payment::PAYMENT_PAYPAL;
-        $result         = $payment->setSelectedPaymentBridge($selectedBridge);
+        $result         = $payment->setSelectedPayment($selectedBridge);
         $this->assertInstanceOf(Payment::class, $result);
 
-        $this->assertAttributeEquals($payment->getSelectedPaymentBridge(), 'selectedPaymentBridge', $payment);
-        $this->assertEquals($selectedBridge, $payment->getSelectedPaymentBridge());
+        $this->assertAttributeEquals($payment->getSelectedPayment(), 'selectedPayment', $payment);
+        $this->assertEquals($selectedBridge, $payment->getSelectedPayment());
     }
 
     public function testContextsAccessors()

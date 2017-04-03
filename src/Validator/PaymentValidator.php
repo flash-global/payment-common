@@ -24,15 +24,15 @@ class PaymentValidator extends AbstractValidator
             throw new Exception(sprintf('The entity to validate must be an instance of %s', Payment::class));
         }
 
-        $this->validateUid($entity->getUid());
+        $this->validateUid($entity->getUuid());
         $this->validateCreatedAt($entity->getCreatedAt());
         $this->validatePayedAt($entity->getPayedAt());
         $this->validateStatus($entity->getStatus());
         $this->validateCancellationReason($entity->getCancellationReason(), $entity);
         $this->validateRequiredPrice($entity->getRequiredPrice());
         $this->validateCapturedPrice($entity->getCapturedPrice(), $entity);
-        $this->validateAuthorizedPaymentBridges($entity->getAuthorizedPaymentBridges());
-        $this->validateSelectedPaymentBridge($entity->getSelectedPaymentBridge(), $entity);
+        $this->validateAuthorizedPayment($entity->getAuthorizedPayment());
+        $this->validateSelectedPayment($entity->getSelectedPayment(), $entity);
         $this->validateContexts($entity->getContexts());
         $this->validateCallbackUrl($entity->getCallbackUrl());
 
@@ -223,34 +223,34 @@ class PaymentValidator extends AbstractValidator
     }
 
     /**
-     * Validator authorizedPaymentBridges
+     * Validator authorizedPayment
      *
-     * @param $authorizedPaymentBridges
+     * @param $authorizedPayments
      *
      * @return bool
      */
-    public function validateAuthorizedPaymentBridges($authorizedPaymentBridges)
+    public function validateAuthorizedPayment($authorizedPayments)
     {
-        if (!is_array($authorizedPaymentBridges)) {
+        if (!is_array($authorizedPayments)) {
             $this->addError(
-                'authorizedPaymentBridges',
+                'authorizedPayment',
                 'The authorized payment bridges must be an array'
             );
 
             return false;
         }
 
-        if (empty($authorizedPaymentBridges)) {
-            $this->addError('authorizedPaymentBridges', 'The authorized payment bridges cannot be empty');
+        if (empty($authorizedPayments)) {
+            $this->addError('authorizedPayment', 'The authorized payment bridges cannot be empty');
 
             return false;
         }
 
-        foreach ($authorizedPaymentBridges as $authorizedPaymentBridge) {
-            if (!in_array($authorizedPaymentBridge, Payment::getPaymentBridges())) {
+        foreach ($authorizedPayments as $authorizedPayment) {
+            if (!in_array($authorizedPayment, Payment::getPaymentBridges())) {
                 $this->addError(
-                    'authorizedPaymentBridges',
-                    'The authorized payment bridge ' . $authorizedPaymentBridge . ' is not an authorized value : '
+                    'authorizedPayment',
+                    'The authorized payment bridge ' . $authorizedPayment . ' is not an authorized value : '
                     . implode(', ', Payment::getPaymentBridges())
                 );
 
@@ -262,25 +262,25 @@ class PaymentValidator extends AbstractValidator
     }
 
     /**
-     * Validator selectedPaymentBridge
+     * Validator selectedPayment
      *
-     * @param $selectedPaymentBridge
+     * @param $selectedPayment
      * @param Payment $payment
      *
      * @return bool
      */
-    public function validateSelectedPaymentBridge($selectedPaymentBridge, $payment)
+    public function validateSelectedPayment($selectedPayment, $payment)
     {
-        if (empty($selectedPaymentBridge)) {
-            $this->addError('selectedPaymentBridge', 'The selected payment bridge cannot be empty');
+        if (empty($selectedPayment)) {
+            $this->addError('selectedPayment', 'The selected payment bridge cannot be empty');
 
             return false;
         }
 
-        $authorizedPaymentBridges = $payment->getAuthorizedPaymentBridges();
-        if (!in_array($selectedPaymentBridge, $authorizedPaymentBridges)) {
+        $authorizedPayment = $payment->getAuthorizedPayment();
+        if (!in_array($selectedPayment, $authorizedPayment)) {
             $this->addError(
-                'selectedPaymentBridge',
+                'selectedPayment',
                 'The selected payment bridge has to be one of the authorized payment bridges value'
             );
 
@@ -348,7 +348,7 @@ class PaymentValidator extends AbstractValidator
             return false;
         }
 
-        foreach ($callbackUrl as $callbackUrlEvent => $callbackUrlString) {
+        foreach (array_keys($callbackUrl) as $callbackUrlEvent) {
             if (!in_array($callbackUrlEvent, Payment::getCallbackUrlEvents())) {
                 $this->addError(
                     'callbackUrl',

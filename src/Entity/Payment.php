@@ -5,6 +5,7 @@ namespace Fei\Service\Payment\Entity;
 use Fei\Entity\AbstractEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Entity\Validator\Exception;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Class Payment
@@ -47,9 +48,9 @@ class Payment extends AbstractEntity
     /**
      * @var string
      *
-     * @Column(type="string", length=23, unique=true)
+     * @Column(type="string", length=36, unique=true)
      */
-    protected $uid;
+    protected $uuid;
 
     /**
      * @var \DateTime
@@ -102,7 +103,7 @@ class Payment extends AbstractEntity
      *
      * See const PAYMENT_XXX for possible values
      */
-    protected $authorizedPaymentBridges;
+    protected $authorizedPayment;
 
     /**
      * @var int
@@ -111,7 +112,7 @@ class Payment extends AbstractEntity
      *
      * See const PAYMENT_XXX for possible values
      */
-    protected $selectedPaymentBridge;
+    protected $selectedPayment;
 
     /**
      * @var ArrayCollection
@@ -132,12 +133,12 @@ class Payment extends AbstractEntity
      */
     public function __construct($data = null)
     {
-        $this->uid                      = uniqid('', true);
+        $this->uuid                      = (Uuid::uuid4())->toString();
         $this->status                   = Payment::STATUS_PENDING;
         $this->createdAt                = new \DateTime();
-        $this->authorizedPaymentBridges = array();
+        $this->authorizedPayment = [];
         $this->contexts                 = new ArrayCollection();
-        $this->callbackUrl              = array();
+        $this->callbackUrl              = [];
 
         parent::__construct($data);
     }
@@ -165,19 +166,19 @@ class Payment extends AbstractEntity
     /**
      * @return string
      */
-    public function getUid()
+    public function getUuid()
     {
-        return $this->uid;
+        return $this->uuid;
     }
 
     /**
-     * @param $uid
+     * @param $uuid
      *
      * @return Payment
      */
-    public function setUid($uid)
+    public function setUuid($uuid)
     {
-        $this->uid = $uid;
+        $this->uuid = $uuid;
 
         return $this;
     }
@@ -305,19 +306,19 @@ class Payment extends AbstractEntity
     /**
      * @return array
      */
-    public function getAuthorizedPaymentBridges()
+    public function getAuthorizedPayment()
     {
-        return $this->authorizedPaymentBridges;
+        return $this->authorizedPayment;
     }
 
     /**
-     * @param array $authorizedPaymentBridges
+     * @param array $authorizedPayment
      *
      * @return Payment
      */
-    public function setAuthorizedPaymentBridges($authorizedPaymentBridges)
+    public function setAuthorizedPayment($authorizedPayment)
     {
-        $this->authorizedPaymentBridges = $authorizedPaymentBridges;
+        $this->authorizedPayment = $authorizedPayment;
 
         return $this;
     }
@@ -325,19 +326,19 @@ class Payment extends AbstractEntity
     /**
      * @return int
      */
-    public function getSelectedPaymentBridge()
+    public function getSelectedPayment()
     {
-        return $this->selectedPaymentBridge;
+        return $this->selectedPayment;
     }
 
     /**
-     * @param int $selectedPaymentBridge
+     * @param int $selectedPayment
      *
      * @return Payment
      */
-    public function setSelectedPaymentBridge($selectedPaymentBridge)
+    public function setSelectedPayment($selectedPayment)
     {
-        $this->selectedPaymentBridge = $selectedPaymentBridge;
+        $this->selectedPayment = $selectedPayment;
 
         return $this;
     }
@@ -358,11 +359,11 @@ class Payment extends AbstractEntity
     public function setContexts($context)
     {
         if ($context instanceof Context) {
-            $context = array($context);
+            $context = [$context];
         }
 
         if ($context instanceof ArrayCollection || is_array($context)) {
-            foreach ($context as $key => $value) {
+            foreach ($context as $value) {
                 if ($value instanceof Context) {
                     $value->setPayment($this);
                     $this->contexts->add($value);
@@ -402,12 +403,12 @@ class Payment extends AbstractEntity
      */
     public function setCallbackUrlEvent($event, $callbackUrl)
     {
-        $callbackUrlEvents = array(
+        $callbackUrlEvents = [
             self::CALLBACK_URL_SUCCEEDED,
             self::CALLBACK_URL_FAILED,
             self::CALLBACK_URL_SAVED,
             self::CALLBACK_URL_CANCELED
-        );
+        ];
 
         if (!in_array($event, $callbackUrlEvents)) {
             throw new Exception('Payment callback URL event ' . $event . ' is undefined.');
@@ -423,7 +424,7 @@ class Payment extends AbstractEntity
      */
     public static function getStatuses()
     {
-        $statuses = array(
+        $statuses = [
             Payment::STATUS_PENDING,
             Payment::STATUS_CANCELLED,
             Payment::STATUS_REJECTED,
@@ -431,7 +432,7 @@ class Payment extends AbstractEntity
             Payment::STATUS_REFUSED,
             Payment::STATUS_ERRORED,
             Payment::STATUS_SETTLED
-        );
+        ];
 
         return $statuses;
     }
@@ -441,10 +442,10 @@ class Payment extends AbstractEntity
      */
     public static function getPaymentBridges()
     {
-        $paymentBridges = array(
+        $paymentBridges = [
             Payment::PAYMENT_PAYPAL,
             Payment::PAYMENT_CB
-        );
+        ];
 
         return $paymentBridges;
     }
@@ -454,12 +455,12 @@ class Payment extends AbstractEntity
      */
     public static function getCallbackUrlEvents()
     {
-        $callbackUrlEvents = array(
+        $callbackUrlEvents = [
             Payment::CALLBACK_URL_SUCCEEDED,
             Payment::CALLBACK_URL_FAILED,
             Payment::CALLBACK_URL_SAVED,
             Payment::CALLBACK_URL_CANCELED
-        );
+        ];
 
         return $callbackUrlEvents;
     }

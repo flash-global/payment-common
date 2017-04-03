@@ -26,23 +26,7 @@ class PaymentValidatorTest extends Unit
             'getErrors' => ['errors']
         ]);
 
-        $payment = new Payment();
-        $payment->setId(1);
-        $payment->setPayedAt(new \DateTime('2017-01-01 00:00:00'));
-        $payment->setStatus(Payment::STATUS_CANCELLED);
-        $payment->setCancellationReason('My cancellation reason');
-        $payment->setRequiredPrice(150.50);
-        $payment->setCapturedPrice(119.99);
-        $payment->setAuthorizedPaymentBridges([Payment::PAYMENT_CB]);
-        $payment->setSelectedPaymentBridge(Payment::PAYMENT_CB);
-        $payment->setContexts([]);
-        $payment->setCallbackUrl(array(
-            Payment::CALLBACK_URL_SUCCEEDED => "MyCallbackUrlSucceeded",
-            Payment::CALLBACK_URL_FAILED    => "MyCallbackUrlFailed",
-            Payment::CALLBACK_URL_CANCELED  => "MyCallbackUrlCanceled",
-            Payment::CALLBACK_URL_SAVED     => "MyCallbackUrlSaved"
-        ));
-
+        $payment = $this->getPaymentEntrity();
         $results = $validator->validate($payment);
         $this->assertFalse($results);
     }
@@ -53,22 +37,7 @@ class PaymentValidatorTest extends Unit
             'getErrors' => []
         ]);
 
-        $payment = new Payment();
-        $payment->setId(1);
-        $payment->setPayedAt(new \DateTime('2017-01-01 00:00:00'));
-        $payment->setStatus(Payment::STATUS_CANCELLED);
-        $payment->setCancellationReason('My cancellation reason');
-        $payment->setRequiredPrice(150.50);
-        $payment->setCapturedPrice(119.99);
-        $payment->setAuthorizedPaymentBridges([Payment::PAYMENT_CB]);
-        $payment->setSelectedPaymentBridge(Payment::PAYMENT_CB);
-        $payment->setContexts([]);
-        $payment->setCallbackUrl(array(
-            Payment::CALLBACK_URL_SUCCEEDED => "MyCallbackUrlSucceeded",
-            Payment::CALLBACK_URL_FAILED    => "MyCallbackUrlFailed",
-            Payment::CALLBACK_URL_CANCELED  => "MyCallbackUrlCanceled",
-            Payment::CALLBACK_URL_SAVED     => "MyCallbackUrlSaved"
-        ));
+        $payment = $this->getPaymentEntrity();
 
         $results = $validator->validate($payment);
         $this->assertTrue($results);
@@ -238,82 +207,82 @@ class PaymentValidatorTest extends Unit
         $this->assertTrue($validator->validateCapturedPrice(400.30, $payment));
     }
 
-    public function testValidateAuthorizedPaymentBridges()
+    public function testValidateAuthorizedPayment()
     {
         $validator = new PaymentValidator();
 
-        $this->assertFalse($validator->validateAuthorizedPaymentBridges(null));
+        $this->assertFalse($validator->validateAuthorizedPayment(null));
         $this->assertEquals(
             'The authorized payment bridges must be an array',
-            $validator->getErrors()['authorizedPaymentBridges'][0]
+            $validator->getErrors()['authorizedPayment'][0]
         );
 
-        $this->assertFalse($validator->validateAuthorizedPaymentBridges(''));
+        $this->assertFalse($validator->validateAuthorizedPayment(''));
         $this->assertEquals(
             'The authorized payment bridges must be an array',
-            $validator->getErrors()['authorizedPaymentBridges'][1]
+            $validator->getErrors()['authorizedPayment'][1]
         );
 
-        $this->assertFalse($validator->validateAuthorizedPaymentBridges('MyAuthorizedPaymentBridge'));
+        $this->assertFalse($validator->validateAuthorizedPayment('MyAuthorizedPaymentBridge'));
         $this->assertEquals(
             'The authorized payment bridges must be an array',
-            $validator->getErrors()['authorizedPaymentBridges'][2]
+            $validator->getErrors()['authorizedPayment'][2]
         );
 
-        $this->assertFalse($validator->validateAuthorizedPaymentBridges(new ArrayCollection()));
+        $this->assertFalse($validator->validateAuthorizedPayment(new ArrayCollection()));
         $this->assertEquals(
             'The authorized payment bridges must be an array',
-            $validator->getErrors()['authorizedPaymentBridges'][3]
+            $validator->getErrors()['authorizedPayment'][3]
         );
 
-        $this->assertFalse($validator->validateAuthorizedPaymentBridges(array()));
+        $this->assertFalse($validator->validateAuthorizedPayment(array()));
         $this->assertEquals(
             'The authorized payment bridges cannot be empty',
-            $validator->getErrors()['authorizedPaymentBridges'][4]
+            $validator->getErrors()['authorizedPayment'][4]
         );
 
-        $this->assertFalse($validator->validateAuthorizedPaymentBridges(['MyAuthorizedPaymentBridge']));
+        $this->assertFalse($validator->validateAuthorizedPayment(['MyAuthorizedPaymentBridge']));
         $this->assertEquals(
             'The authorized payment bridge MyAuthorizedPaymentBridge is not an authorized value : '
             . implode(', ', Payment::getPaymentBridges()),
-            $validator->getErrors()['authorizedPaymentBridges'][5]
+            $validator->getErrors()['authorizedPayment'][5]
         );
 
-        $this->assertTrue($validator->validateAuthorizedPaymentBridges([Payment::PAYMENT_CB]));
+        $this->assertTrue($validator->validateAuthorizedPayment([Payment::PAYMENT_CB]));
     }
 
-    public function testValidateSelectedPaymentBridge()
+    public function testValidateSelectedPayment()
     {
         $validator = new PaymentValidator();
 
         $payment = new Payment();
-        $payment->setAuthorizedPaymentBridges([Payment::PAYMENT_CB]);
+        $payment->setAuthorizedPayment([Payment::PAYMENT_CB]);
 
-        $this->assertFalse($validator->validateSelectedPaymentBridge(null, $payment));
+        $this->assertFalse($validator->validateSelectedPayment(null, $payment));
         $this->assertEquals(
             'The selected payment bridge cannot be empty',
-            $validator->getErrors()['selectedPaymentBridge'][0]
+            $validator->getErrors()['selectedPayment'][0]
         );
 
-        $this->assertFalse($validator->validateSelectedPaymentBridge('', $payment));
+        $this->assertFalse($validator->validateSelectedPayment('', $payment));
         $this->assertEquals(
             'The selected payment bridge cannot be empty',
-            $validator->getErrors()['selectedPaymentBridge'][1]
+            $validator->getErrors()['selectedPayment'][1]
         );
 
-        $this->assertFalse($validator->validateSelectedPaymentBridge('MyAuthorizedPaymentBridge', $payment));
+        $this->assertFalse($validator->validateSelectedPayment('MyAuthorizedPaymentBridge', $payment));
         $this->assertEquals(
             'The selected payment bridge has to be one of the authorized payment bridges value',
-            $validator->getErrors()['selectedPaymentBridge'][2]
+            $validator->getErrors()['selectedPayment'][2]
         );
 
-        $this->assertFalse($validator->validateSelectedPaymentBridge(Payment::PAYMENT_PAYPAL, $payment));
+        $this->assertFalse($validator->validateSelectedPayment(Payment::PAYMENT_PAYPAL, $payment));
         $this->assertEquals(
             'The selected payment bridge has to be one of the authorized payment bridges value',
-            $validator->getErrors()['selectedPaymentBridge'][2]
+            $validator->getErrors()['selectedPayment'][2]
         );
 
-        $this->assertTrue($validator->validateSelectedPaymentBridge(Payment::PAYMENT_CB, $payment));
+        $this->assertTrue($validator->validateSelectedPayment(Payment::PAYMENT_CB, $payment));
     }
 
     public function testValidateContexts()
@@ -396,5 +365,27 @@ class PaymentValidatorTest extends Unit
             Payment::CALLBACK_URL_CANCELED  => "MyCallbackUrlCanceled",
             Payment::CALLBACK_URL_SAVED     => "MyCallbackUrlSaved"
         ]));
+    }
+
+    protected function getPaymentEntrity()
+    {
+        $payment = new Payment();
+        $payment->setId(1);
+        $payment->setPayedAt(new \DateTime('2017-01-01 00:00:00'));
+        $payment->setStatus(Payment::STATUS_CANCELLED);
+        $payment->setCancellationReason('My cancellation reason');
+        $payment->setRequiredPrice(150.50);
+        $payment->setCapturedPrice(119.99);
+        $payment->setAuthorizedPayment([Payment::PAYMENT_CB]);
+        $payment->setSelectedPayment(Payment::PAYMENT_CB);
+        $payment->setContexts([]);
+        $payment->setCallbackUrl(array(
+            Payment::CALLBACK_URL_SUCCEEDED => "MyCallbackUrlSucceeded",
+            Payment::CALLBACK_URL_FAILED    => "MyCallbackUrlFailed",
+            Payment::CALLBACK_URL_CANCELED  => "MyCallbackUrlCanceled",
+            Payment::CALLBACK_URL_SAVED     => "MyCallbackUrlSaved"
+        ));
+
+        return $payment;
     }
 }
