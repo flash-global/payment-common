@@ -105,7 +105,7 @@ class Payment extends AbstractEntity
     protected $capturedPrice;
 
     /**
-     * @var array
+     * @var int
      *
      * @Column(type="integer")
      *
@@ -141,12 +141,12 @@ class Payment extends AbstractEntity
      */
     public function __construct($data = null)
     {
-        $this->uuid                      = (Uuid::uuid4())->toString();
-        $this->status                   = Payment::STATUS_PENDING;
-        $this->createdAt                = new \DateTime();
-        $this->authorizedPayment = [];
-        $this->contexts                 = new ArrayCollection();
-        $this->callbackUrl              = [];
+        $this->setUuid((Uuid::uuid4())->toString());
+        $this->setStatus(Payment::STATUS_PENDING);
+        $this->setCreatedAt(new \DateTime());
+        $this->setAuthorizedPayment(0);
+        $this->setContexts(new ArrayCollection());
+        $this->setCallbackUrl([]);
 
         parent::__construct($data);
     }
@@ -336,7 +336,7 @@ class Payment extends AbstractEntity
     }
 
     /**
-     * @return array
+     * @return int
      */
     public function getAuthorizedPayment()
     {
@@ -344,7 +344,7 @@ class Payment extends AbstractEntity
     }
 
     /**
-     * @param array $authorizedPayment
+     * @param int $authorizedPayment
      *
      * @return Payment
      */
@@ -401,6 +401,10 @@ class Payment extends AbstractEntity
                     $this->contexts->add($value);
                 }
             }
+        }
+        
+        if (is_null($this->contexts)) {
+            $this->contexts = new ArrayCollection();
         }
 
         return $this;
