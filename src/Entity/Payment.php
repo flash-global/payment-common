@@ -206,6 +206,10 @@ class Payment extends AbstractEntity
      */
     public function setCreatedAt($createdAt)
     {
+        if (is_string($createdAt)) {
+            $createdAt = new \DateTime($createdAt);
+        }
+
         $this->createdAt = $createdAt;
 
         return $this;
@@ -226,6 +230,10 @@ class Payment extends AbstractEntity
      */
     public function setPayedAt($payedAt)
     {
+        if (is_string($payedAt)) {
+            $payedAt = new \DateTime($payedAt);
+        }
+
         $this->payedAt = $payedAt;
 
         return $this;
@@ -250,6 +258,10 @@ class Payment extends AbstractEntity
      */
     public function setExpirationDate($expirationDate)
     {
+        if (is_string($expirationDate)) {
+            $expirationDate = new \DateTime($expirationDate);
+        }
+
         $this->expirationDate = $expirationDate;
 
         return $this;
@@ -395,14 +407,20 @@ class Payment extends AbstractEntity
         }
 
         if ($context instanceof ArrayCollection || is_array($context)) {
-            foreach ($context as $value) {
+            foreach ($context as $key => $value) {
                 if ($value instanceof Context) {
                     $value->setPayment($this);
                     $this->contexts->add($value);
+                } else {
+                    $this->contexts->add(new Context([
+                        'key' => $key,
+                        'value' => $value,
+                        'payment' => $this
+                    ]));
                 }
             }
         }
-        
+
         if (is_null($this->contexts)) {
             $this->contexts = new ArrayCollection();
         }
@@ -419,13 +437,13 @@ class Payment extends AbstractEntity
     }
 
     /**
-     * @param array $callbackUrl
+     * @param array|string $callbackUrl
      *
      * @return Payment
      */
-    public function setCallbackUrl(array $callbackUrl)
+    public function setCallbackUrl($callbackUrl)
     {
-        $this->callbackUrl = $callbackUrl;
+        $this->callbackUrl = (is_string($callbackUrl)) ? unserialize($callbackUrl) : $callbackUrl;
 
         return $this;
     }
@@ -494,5 +512,41 @@ class Payment extends AbstractEntity
             Payment::CALLBACK_URL_SAVED,
             Payment::CALLBACK_URL_CANCELED
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray($mapped = false)
+    {
+        $properties = array_keys(get_class_vars(self::class));
+        $array = [];
+
+        foreach ($properties as $property) {
+            $getter = 'get' . $this->toCamelCase($property);
+
+            if (method_exists($this, $getter)) {
+                $value = $this->$getter();
+
+                if ($value instanceof \DateTime) {
+                    $value = $value->format('c');
+                }
+
+                if ($property === 'contexts') {
+                    $tmpValue = [];
+
+                    foreach ($value as $v) {
+                        $tmpValue[$v->getKey()] = $v->getValue();
+                    }
+
+                    $value = $tmpValue;
+                }
+
+
+                $array[$property] = $value;
+            }
+        }
+
+        return $array;
     }
 }

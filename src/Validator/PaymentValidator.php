@@ -15,6 +15,9 @@ use Fei\Service\Payment\Entity\Payment;
  */
 class PaymentValidator extends AbstractValidator
 {
+    const UUID_PATTERN =
+        '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$';
+
     /**
      * {@inheritdoc}
      */
@@ -24,7 +27,7 @@ class PaymentValidator extends AbstractValidator
             throw new Exception(sprintf('The entity to validate must be an instance of %s', Payment::class));
         }
 
-        $this->validateUid($entity->getUuid());
+        $this->validateUuid($entity->getUuid());
         $this->validateCreatedAt($entity->getCreatedAt());
         $this->validatePayedAt($entity->getPayedAt());
         $this->validateStatus($entity->getStatus());
@@ -42,20 +45,20 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validate uid
      *
-     * @param $uid
+     * @param $uuid
      *
      * @return bool
      */
-    public function validateUid($uid)
+    public function validateUuid($uuid)
     {
-        if (strlen($uid) === 0) {
-            $this->addError('uid', 'The UID cannot be an empty string');
+        if (strlen($uuid) === 0) {
+            $this->addError('uuid', 'The UUID cannot be an empty string');
 
             return false;
         }
 
-        if (strlen($uid) < 23 || strlen($uid) > 23) {
-            $this->addError('uid', 'The UID `' . $uid  . '` is not a valid UID');
+        if (!preg_match('/' . self::UUID_PATTERN . '/', $uuid)) {
+            $this->addError('uuid', 'The UUID `' . $uuid  . '` is not a valid UUID');
 
             return false;
         }
@@ -96,10 +99,8 @@ class PaymentValidator extends AbstractValidator
      */
     public function validatePayedAt($payedAt)
     {
-        if (empty($payedAt)) {
-            $this->addError('payedAt', 'The payment date cannot be empty');
-
-            return false;
+        if (is_null($payedAt)) {
+            return true;
         }
 
         if (!$payedAt instanceof \DateTime) {
@@ -200,7 +201,7 @@ class PaymentValidator extends AbstractValidator
      */
     public function validateCapturedPrice($capturedPrice, $payment)
     {
-        if (!is_numeric($capturedPrice)) {
+        if ($capturedPrice !== null && !is_numeric($capturedPrice)) {
             $this->addError('capturedPrice', 'The captured price must be numeric');
 
             return false;
@@ -231,31 +232,18 @@ class PaymentValidator extends AbstractValidator
      */
     public function validateAuthorizedPayment($authorizedPayments)
     {
-        if (!is_array($authorizedPayments)) {
-            $this->addError(
-                'authorizedPayment',
-                'The authorized payment bridges must be an array'
-            );
-
-            return false;
-        }
 
         if (empty($authorizedPayments)) {
             $this->addError('authorizedPayment', 'The authorized payment bridges cannot be empty');
-
-            return false;
         }
 
-        foreach ($authorizedPayments as $authorizedPayment) {
-            if (!in_array($authorizedPayment, Payment::getPaymentBridges())) {
-                $this->addError(
-                    'authorizedPayment',
-                    'The authorized payment bridge ' . $authorizedPayment . ' is not an authorized value : '
-                    . implode(', ', Payment::getPaymentBridges())
-                );
+        if (!is_integer($authorizedPayments)) {
+            $this->addError(
+                'authorizedPayment',
+                'The authorized payment bridges must be an integer'
+            );
 
-                return false;
-            }
+            return false;
         }
 
         return true;
@@ -265,24 +253,13 @@ class PaymentValidator extends AbstractValidator
      * Validator selectedPayment
      *
      * @param $selectedPayment
-     * @param Payment $payment
      *
      * @return bool
      */
-    public function validateSelectedPayment($selectedPayment, $payment)
+    public function validateSelectedPayment($selectedPayment)
     {
-        if (empty($selectedPayment)) {
-            $this->addError('selectedPayment', 'The selected payment bridge cannot be empty');
-
-            return false;
-        }
-
-        $authorizedPayment = $payment->getAuthorizedPayment();
-        if (!in_array($selectedPayment, $authorizedPayment)) {
-            $this->addError(
-                'selectedPayment',
-                'The selected payment bridge has to be one of the authorized payment bridges value'
-            );
+        if (!is_integer($selectedPayment)) {
+            $this->addError('selectedPayment', 'The selected payment bridge has to be an integer');
 
             return false;
         }

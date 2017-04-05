@@ -9,6 +9,7 @@ use Fei\Entity\Validator\Exception;
 use Fei\Service\Payment\Entity\Context;
 use Fei\Service\Payment\Entity\Payment;
 use Fei\Service\Payment\Validator\PaymentValidator;
+use Ramsey\Uuid\Uuid;
 
 class PaymentValidatorTest extends Unit
 {
@@ -43,26 +44,29 @@ class PaymentValidatorTest extends Unit
         $this->assertTrue($results);
     }
 
-    public function testValidateUid()
+    public function testValidateUuid()
     {
         $validator = new PaymentValidator();
 
-        $this->assertFalse($validator->validateUid(null));
-        $this->assertEquals('The UID cannot be an empty string', $validator->getErrors()['uid'][0]);
+        $this->assertFalse($validator->validateUuid(null));
+        $this->assertEquals('The UUID cannot be an empty string', $validator->getErrors()['uuid'][0]);
 
-        $this->assertFalse($validator->validateUid(''));
-        $this->assertEquals('The UID cannot be an empty string', $validator->getErrors()['uid'][1]);
+        $this->assertFalse($validator->validateUuid(''));
+        $this->assertEquals('The UUID cannot be an empty string', $validator->getErrors()['uuid'][1]);
 
-        $this->assertFalse($validator->validateUid('MyUid'));
-        $this->assertEquals('The UID `MyUid` is not a valid UID', $validator->getErrors()['uid'][2]);
+        $this->assertFalse($validator->validateUuid('MyUid'));
+        $this->assertEquals('The UUID `MyUid` is not a valid UUID', $validator->getErrors()['uuid'][2]);
 
-        $this->assertFalse($validator->validateUid('MySuuuuuuuuuuuperLongUid'));
-        $this->assertEquals('The UID `MySuuuuuuuuuuuperLongUid` is not a valid UID', $validator->getErrors()['uid'][3]);
+        $this->assertFalse($validator->validateUuid('MySuuuuuuuuuuuperLongUid'));
+        $this->assertEquals(
+            'The UUID `MySuuuuuuuuuuuperLongUid` is not a valid UUID',
+            $validator->getErrors()['uuid'][3]
+        );
 
-        $this->assertFalse($validator->validateUid(uniqid('test', true)));
-        $this->assertFalse($validator->validateUid(uniqid('', false)));
+        $this->assertFalse($validator->validateUuid(uniqid('test', true)));
+        $this->assertFalse($validator->validateUuid(uniqid('', false)));
 
-        $this->assertTrue($validator->validateUid(uniqid('', true)));
+        $this->assertTrue($validator->validateUuid((Uuid::uuid4())->toString()));
     }
 
     public function testValidateCreatedAt()
@@ -88,16 +92,18 @@ class PaymentValidatorTest extends Unit
     {
         $validator = new PaymentValidator();
 
-        $this->assertFalse($validator->validatePayedAt(null));
-        $this->assertEquals('The payment date cannot be empty', $validator->getErrors()['payedAt'][0]);
+        $this->assertTrue($validator->validatePayedAt(null));
 
         $this->assertFalse($validator->validatePayedAt(''));
-        $this->assertEquals('The payment date cannot be empty', $validator->getErrors()['payedAt'][1]);
+        $this->assertEquals(
+            'The payment date has to be and instance of \DateTime',
+            $validator->getErrors()['payedAt'][0]
+        );
 
         $this->assertFalse($validator->validatePayedAt('01/01/2017 00:00:00'));
         $this->assertEquals(
             'The payment date has to be and instance of \DateTime',
-            $validator->getErrors()['payedAt'][2]
+            $validator->getErrors()['payedAt'][1]
         );
 
         $this->assertTrue($validator->validatePayedAt(new \DateTime('now')));
@@ -183,25 +189,24 @@ class PaymentValidatorTest extends Unit
         $payment = new Payment();
         $payment->setRequiredPrice(500.30);
 
-        $this->assertFalse($validator->validateCapturedPrice(null, $payment));
-        $this->assertEquals('The captured price must be numeric', $validator->getErrors()['capturedPrice'][0]);
+        $this->assertTrue($validator->validateCapturedPrice(null, $payment));
 
         $this->assertFalse($validator->validateCapturedPrice('', $payment));
-        $this->assertEquals('The captured price must be numeric', $validator->getErrors()['capturedPrice'][1]);
+        $this->assertEquals('The captured price must be numeric', $validator->getErrors()['capturedPrice'][0]);
 
         $this->assertFalse($validator->validateCapturedPrice('MyPrice', $payment));
-        $this->assertEquals('The captured price must be numeric', $validator->getErrors()['capturedPrice'][2]);
+        $this->assertEquals('The captured price must be numeric', $validator->getErrors()['capturedPrice'][1]);
 
         $this->assertFalse($validator->validateCapturedPrice(-400.30, $payment));
         $this->assertEquals(
             'The captured price must be higher or equal to 0',
-            $validator->getErrors()['capturedPrice'][3]
+            $validator->getErrors()['capturedPrice'][2]
         );
 
         $this->assertFalse($validator->validateCapturedPrice(600.30, $payment));
         $this->assertEquals(
             'The captured price must be lower or equal to the required price',
-            $validator->getErrors()['capturedPrice'][4]
+            $validator->getErrors()['capturedPrice'][3]
         );
 
         $this->assertTrue($validator->validateCapturedPrice(400.30, $payment));
@@ -212,43 +217,32 @@ class PaymentValidatorTest extends Unit
         $validator = new PaymentValidator();
 
         $this->assertFalse($validator->validateAuthorizedPayment(null));
-        $this->assertEquals(
-            'The authorized payment bridges must be an array',
-            $validator->getErrors()['authorizedPayment'][0]
-        );
 
         $this->assertFalse($validator->validateAuthorizedPayment(''));
         $this->assertEquals(
-            'The authorized payment bridges must be an array',
+            'The authorized payment bridges must be an integer',
             $validator->getErrors()['authorizedPayment'][1]
         );
 
         $this->assertFalse($validator->validateAuthorizedPayment('MyAuthorizedPaymentBridge'));
         $this->assertEquals(
-            'The authorized payment bridges must be an array',
+            'The authorized payment bridges cannot be empty',
             $validator->getErrors()['authorizedPayment'][2]
         );
 
         $this->assertFalse($validator->validateAuthorizedPayment(new ArrayCollection()));
         $this->assertEquals(
-            'The authorized payment bridges must be an array',
+            'The authorized payment bridges must be an integer',
             $validator->getErrors()['authorizedPayment'][3]
         );
 
         $this->assertFalse($validator->validateAuthorizedPayment(array()));
         $this->assertEquals(
-            'The authorized payment bridges cannot be empty',
+            'The authorized payment bridges must be an integer',
             $validator->getErrors()['authorizedPayment'][4]
         );
 
-        $this->assertFalse($validator->validateAuthorizedPayment(['MyAuthorizedPaymentBridge']));
-        $this->assertEquals(
-            'The authorized payment bridge MyAuthorizedPaymentBridge is not an authorized value : '
-            . implode(', ', Payment::getPaymentBridges()),
-            $validator->getErrors()['authorizedPayment'][5]
-        );
-
-        $this->assertTrue($validator->validateAuthorizedPayment([Payment::PAYMENT_CB]));
+        $this->assertTrue($validator->validateAuthorizedPayment(Payment::PAYMENT_CB));
     }
 
     public function testValidateSelectedPayment()
@@ -258,31 +252,27 @@ class PaymentValidatorTest extends Unit
         $payment = new Payment();
         $payment->setAuthorizedPayment([Payment::PAYMENT_CB]);
 
-        $this->assertFalse($validator->validateSelectedPayment(null, $payment));
+        $this->assertFalse($validator->validateSelectedPayment(null));
         $this->assertEquals(
-            'The selected payment bridge cannot be empty',
+            'The selected payment bridge has to be an integer',
             $validator->getErrors()['selectedPayment'][0]
         );
 
-        $this->assertFalse($validator->validateSelectedPayment('', $payment));
+        $this->assertFalse($validator->validateSelectedPayment(''));
         $this->assertEquals(
-            'The selected payment bridge cannot be empty',
+            'The selected payment bridge has to be an integer',
             $validator->getErrors()['selectedPayment'][1]
         );
 
-        $this->assertFalse($validator->validateSelectedPayment('MyAuthorizedPaymentBridge', $payment));
+        $this->assertFalse($validator->validateSelectedPayment('MyAuthorizedPaymentBridge'));
         $this->assertEquals(
-            'The selected payment bridge has to be one of the authorized payment bridges value',
+            'The selected payment bridge has to be an integer',
             $validator->getErrors()['selectedPayment'][2]
         );
 
-        $this->assertFalse($validator->validateSelectedPayment(Payment::PAYMENT_PAYPAL, $payment));
-        $this->assertEquals(
-            'The selected payment bridge has to be one of the authorized payment bridges value',
-            $validator->getErrors()['selectedPayment'][2]
-        );
+        $this->assertTrue($validator->validateSelectedPayment(Payment::PAYMENT_PAYPAL));
 
-        $this->assertTrue($validator->validateSelectedPayment(Payment::PAYMENT_CB, $payment));
+        $this->assertTrue($validator->validateSelectedPayment(Payment::PAYMENT_CB));
     }
 
     public function testValidateContexts()

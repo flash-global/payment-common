@@ -1,0 +1,39 @@
+<?php
+namespace Fei\Service\Payment\Entity;
+
+use League\Fractal\TransformerAbstract;
+
+/**
+ * Class PaymentTransformer
+ *
+ * @package Fei\Service\Payment\Entity
+ */
+class PaymentTransformer extends TransformerAbstract
+{
+    public function transform(Payment $payment)
+    {
+        $contextItems = array();
+
+        foreach ($payment->getContexts() as $contextItem) {
+            $contextItems[$contextItem->getKey()] = $contextItem->getValue();
+        }
+
+        $payedAt = $payment->getPayedAt();
+
+        return [
+            'id' => (int)$payment->getId(),
+            'uuid' => $payment->getUuid(),
+            'createdAt' => $payment->getCreatedAt()->format('c'),
+            'payedAt' => ($payedAt instanceof \DateTime) ? $payedAt->format('c') : $payedAt,
+            'expirationDate' => $payment->getExpirationDate()->format('c'),
+            'status' => $payment->getStatus(),
+            'cancellationReason' => $payment->getCancellationReason(),
+            'requiredPrice' => $payment->getRequiredPrice(),
+            'capturedPrice' => $payment->getCapturedPrice(),
+            'authorizedPayment' => $payment->getAuthorizedPayment(),
+            'selectedPayment' => $payment->getSelectedPayment(),
+            'contexts' => $contextItems,
+            'callbackUrl' => $payment->getCallbackUrl()
+        ];
+    }
+}
