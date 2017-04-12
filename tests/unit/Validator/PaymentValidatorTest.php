@@ -250,24 +250,20 @@ class PaymentValidatorTest extends Unit
         $validator = new PaymentValidator();
 
         $payment = new Payment();
-        $payment->setAuthorizedPayment([Payment::PAYMENT_CB]);
+        $payment->setAuthorizedPayment(Payment::PAYMENT_CB);
 
-        $this->assertFalse($validator->validateSelectedPayment(null));
+        $this->assertTrue($validator->validateSelectedPayment(null));
+
+        $this->assertFalse($validator->validateSelectedPayment(''));
         $this->assertEquals(
             'The selected payment bridge has to be an integer',
             $validator->getErrors()['selectedPayment'][0]
         );
 
-        $this->assertFalse($validator->validateSelectedPayment(''));
-        $this->assertEquals(
-            'The selected payment bridge has to be an integer',
-            $validator->getErrors()['selectedPayment'][1]
-        );
-
         $this->assertFalse($validator->validateSelectedPayment('MyAuthorizedPaymentBridge'));
         $this->assertEquals(
             'The selected payment bridge has to be an integer',
-            $validator->getErrors()['selectedPayment'][2]
+            $validator->getErrors()['selectedPayment'][1]
         );
 
         $this->assertTrue($validator->validateSelectedPayment(Payment::PAYMENT_PAYPAL));

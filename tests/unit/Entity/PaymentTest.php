@@ -173,16 +173,16 @@ class PaymentTest extends Unit
     public function testGetStatuses()
     {
         $this->assertEquals(
-            array(
-                Payment::STATUS_PENDING,
-                Payment::STATUS_CANCELLED,
-                Payment::STATUS_REJECTED,
-                Payment::STATUS_AUTHORIZED,
-                Payment::STATUS_REFUSED,
-                Payment::STATUS_OUTDATED,
-                Payment::STATUS_ERRORED,
-                Payment::STATUS_SETTLED
-            ),
+            [
+                Payment::STATUS_PENDING => 'Pending',
+                Payment::STATUS_CANCELLED => 'Cancelled',
+                Payment::STATUS_REJECTED => 'Rejected',
+                Payment::STATUS_AUTHORIZED => 'Authorized',
+                Payment::STATUS_REFUSED => 'Refused',
+                Payment::STATUS_OUTDATED => 'Outdated',
+                Payment::STATUS_ERRORED => 'Errored',
+                Payment::STATUS_SETTLED => 'Settled'
+            ],
             Payment::getStatuses()
         );
     }

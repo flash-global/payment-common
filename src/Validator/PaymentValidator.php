@@ -15,6 +15,8 @@ use Fei\Service\Payment\Entity\Payment;
  */
 class PaymentValidator extends AbstractValidator
 {
+    protected $context;
+
     const UUID_PATTERN =
         '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$';
 
@@ -27,6 +29,7 @@ class PaymentValidator extends AbstractValidator
             throw new Exception(sprintf('The entity to validate must be an instance of %s', Payment::class));
         }
 
+        $this->validateId($entity->getId());
         $this->validateUuid($entity->getUuid());
         $this->validateCreatedAt($entity->getCreatedAt());
         $this->validatePayedAt($entity->getPayedAt());
@@ -35,11 +38,28 @@ class PaymentValidator extends AbstractValidator
         $this->validateRequiredPrice($entity->getRequiredPrice());
         $this->validateCapturedPrice($entity->getCapturedPrice(), $entity);
         $this->validateAuthorizedPayment($entity->getAuthorizedPayment());
-        $this->validateSelectedPayment($entity->getSelectedPayment(), $entity);
+        $this->validateSelectedPayment($entity->getSelectedPayment());
         $this->validateContexts($entity->getContexts());
         $this->validateCallbackUrl($entity->getCallbackUrl());
 
         return empty($this->getErrors());
+    }
+
+    /**
+     * Validate the id
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function validateId($id)
+    {
+        if (in_array($this->getContext(), ['update', 'delete']) && !is_integer($id)) {
+            $this->addError('uuid', 'The id has to be an integer');
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -127,7 +147,7 @@ class PaymentValidator extends AbstractValidator
             return false;
         }
 
-        if (!in_array($status, Payment::getStatuses())) {
+        if (!in_array($status, array_keys(Payment::getStatuses()))) {
             $this->addError(
                 'status',
                 'The payment status has to be one of the following values : ' . implode(', ', Payment::getStatuses())
@@ -258,6 +278,10 @@ class PaymentValidator extends AbstractValidator
      */
     public function validateSelectedPayment($selectedPayment)
     {
+        if (is_null($selectedPayment)) {
+            return true;
+        }
+
         if (!is_integer($selectedPayment)) {
             $this->addError('selectedPayment', 'The selected payment bridge has to be an integer');
 
@@ -358,5 +382,29 @@ class PaymentValidator extends AbstractValidator
         }
 
         return true;
+    }
+
+    /**
+     * Get Context
+     *
+     * @return mixed
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
+     * Set Context
+     *
+     * @param mixed $context
+     *
+     * @return $this
+     */
+    public function setContext($context)
+    {
+        $this->context = $context;
+
+        return $this;
     }
 }
