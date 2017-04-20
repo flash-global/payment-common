@@ -495,6 +495,17 @@ class Payment extends AbstractEntity
     /**
      * @return array
      */
+    public static function getAutorizedPayments()
+    {
+        return [
+            self::PAYMENT_PAYPAL => 'Paypal',
+            self::PAYMENT_CB     => 'Credit card'
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public static function getPaymentBridges()
     {
         return [
