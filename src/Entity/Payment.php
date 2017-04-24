@@ -29,7 +29,7 @@ class Payment extends AbstractEntity
 
     // Authorized payment flags
     const PAYMENT_PAYPAL = 1;
-    const PAYMENT_CB     = 2;
+    const PAYMENT_STRIPE = 2;
 
     // Payment callback URL key
     const CALLBACK_URL_SUCCEEDED = "succeeded";
@@ -272,7 +272,7 @@ class Payment extends AbstractEntity
      */
     public function getStatus()
     {
-        return $this->status;
+        return (int)$this->status;
     }
 
     /**
@@ -282,7 +282,7 @@ class Payment extends AbstractEntity
      */
     public function setStatus($status)
     {
-        $this->status = $status;
+        $this->status = (int)$status;
 
         return $this;
     }
@@ -499,7 +499,7 @@ class Payment extends AbstractEntity
     {
         return [
             self::PAYMENT_PAYPAL => 'Paypal',
-            self::PAYMENT_CB     => 'Credit card'
+            self::PAYMENT_STRIPE => 'Stripe'
         ];
     }
 
@@ -510,7 +510,7 @@ class Payment extends AbstractEntity
     {
         return [
             Payment::PAYMENT_PAYPAL,
-            Payment::PAYMENT_CB
+            Payment::PAYMENT_STRIPE
         ];
     }
 

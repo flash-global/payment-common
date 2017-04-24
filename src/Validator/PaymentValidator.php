@@ -300,12 +300,13 @@ class PaymentValidator extends AbstractValidator
      */
     public function validateContexts($context)
     {
+        // persistent collection
         if (!$context instanceof ArrayCollection) {
-            $this->addError(
-                'contexts',
-                'Context has to be and instance of \Doctrine\Common\Collections\ArrayCollection'
-            );
-            return false;
+//            $this->addError(
+//                'contexts',
+//                'Context has to be and instance of \Doctrine\Common\Collections\ArrayCollection'
+//            );
+//            return false;
         }
 
         if (!$context->isEmpty()) {
@@ -361,24 +362,13 @@ class PaymentValidator extends AbstractValidator
             }
         }
 
-        foreach (Payment::getCallbackUrlEvents() as $callbackUrlEvent) {
-            if (!isset($callbackUrl[$callbackUrlEvent])) {
-                $this->addError(
-                    'callbackUrl',
-                    'The callback URL for the event ' . $callbackUrlEvent . ' must be defined'
-                );
+        if (empty($callbackUrl['saved'])) {
+            $this->addError(
+                'callbackUrl',
+                'The callback URL for the event saved has to be defined'
+            );
 
-                return false;
-            }
-
-            if (empty($callbackUrl[$callbackUrlEvent])) {
-                $this->addError(
-                    'callbackUrl',
-                    'The callback URL for the event ' . $callbackUrlEvent . ' can\'t be empty'
-                );
-
-                return false;
-            }
+            return false;
         }
 
         return true;
