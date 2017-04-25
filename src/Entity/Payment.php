@@ -30,6 +30,7 @@ class Payment extends AbstractEntity
     // Authorized payment flags
     const PAYMENT_PAYPAL = 1;
     const PAYMENT_STRIPE = 2;
+    const PAYMENT_OGONE = 4;
 
     // Payment callback URL key
     const CALLBACK_URL_SUCCEEDED = "succeeded";
@@ -499,7 +500,8 @@ class Payment extends AbstractEntity
     {
         return [
             self::PAYMENT_PAYPAL => 'Paypal',
-            self::PAYMENT_STRIPE => 'Stripe'
+            self::PAYMENT_STRIPE => 'Stripe',
+            self::PAYMENT_OGONE => 'Ogone'
         ];
     }
 
@@ -510,7 +512,8 @@ class Payment extends AbstractEntity
     {
         return [
             Payment::PAYMENT_PAYPAL,
-            Payment::PAYMENT_STRIPE
+            Payment::PAYMENT_STRIPE,
+            Payment::PAYMENT_OGONE
         ];
     }
 
