@@ -21,6 +21,16 @@ class PaymentValidator extends AbstractValidator
         '^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$';
 
     /**
+     * PaymentValidator constructor.
+     *
+     * @param string $context the context of the validation
+     */
+    public function __construct($context)
+    {
+        $this->setContext($context);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function validate(EntityInterface $entity)
@@ -32,13 +42,14 @@ class PaymentValidator extends AbstractValidator
         $this->validateId($entity->getId());
         $this->validateUuid($entity->getUuid());
         $this->validateCreatedAt($entity->getCreatedAt());
-        $this->validatePayedAt($entity->getPayedAt());
+        $this->validatePayedAt($entity->getPayedAt(), $entity->getStatus());
+        $this->validateExpirationDate($entity->getPayedAt());
         $this->validateStatus($entity->getStatus());
         $this->validateCancellationReason($entity->getCancellationReason(), $entity);
         $this->validateRequiredPrice($entity->getRequiredPrice());
         $this->validateCapturedPrice($entity->getCapturedPrice(), $entity);
         $this->validateAuthorizedPayment($entity->getAuthorizedPayment());
-        $this->validateSelectedPayment($entity->getSelectedPayment());
+        $this->validateSelectedPayment($entity->getSelectedPayment(), $entity->getStatus());
         $this->validateContexts($entity->getContexts());
         $this->validateCallbackUrl($entity->getCallbackUrl());
 
@@ -46,16 +57,21 @@ class PaymentValidator extends AbstractValidator
     }
 
     /**
-     * Validate the id
+     * Validate the id of the Payment entity
      *
-     * @param $id
+     * @param mixed $id
      *
      * @return bool
      */
     public function validateId($id)
     {
         if (in_array($this->getContext(), ['update', 'delete']) && !is_integer($id)) {
-            $this->addError('uuid', 'The id has to be an integer');
+            $this->addError('id', 'The id has to be an integer');
+            return false;
+        }
+
+        if ($this->getContext() === 'create' && $id !== null) {
+            $this->addError('id', 'The id cannot be set before creating a Payment');
             return false;
         }
 
@@ -63,23 +79,21 @@ class PaymentValidator extends AbstractValidator
     }
 
     /**
-     * Validate uid
+     * Validate the uuid of a payment entity
      *
-     * @param $uuid
+     * @param mixed $uuid
      *
      * @return bool
      */
     public function validateUuid($uuid)
     {
-        if (strlen($uuid) === 0) {
+        if (strlen($uuid) === 0 || $uuid === null) {
             $this->addError('uuid', 'The UUID cannot be an empty string');
-
             return false;
         }
 
         if (!preg_match('/' . self::UUID_PATTERN . '/', $uuid)) {
             $this->addError('uuid', 'The UUID `' . $uuid  . '` is not a valid UUID');
-
             return false;
         }
 
@@ -87,9 +101,9 @@ class PaymentValidator extends AbstractValidator
     }
 
     /**
-     * Validate createdAt
+     * Validate the created at date of a payment entity
      *
-     * @param $createdAt
+     * @param mixed $createdAt
      *
      * @return bool
      */
@@ -117,14 +131,32 @@ class PaymentValidator extends AbstractValidator
      *
      * @return bool
      */
-    public function validatePayedAt($payedAt)
+    public function validatePayedAt($payedAt, $status)
     {
-        if (is_null($payedAt)) {
-            return true;
+        if ($status === Payment::STATUS_SETTLED && !$payedAt instanceof \DateTime) {
+            $this->addError('payedAt', 'The payment date has to be and instance of \DateTime');
+            return false;
         }
 
-        if (!$payedAt instanceof \DateTime) {
+        if ($payedAt !== null && !$payedAt instanceof \DateTime) {
             $this->addError('payedAt', 'The payment date has to be and instance of \DateTime');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate expirationDate
+     *
+     * @param $expirationDate
+     *
+     * @return bool
+     */
+    public function validateExpirationDate($expirationDate)
+    {
+        if (!$expirationDate instanceof \DateTime) {
+            $this->addError('expirationDate', 'The expiration date has to be and instance of \DateTime');
 
             return false;
         }
@@ -172,7 +204,10 @@ class PaymentValidator extends AbstractValidator
         $status = $payment->getStatus();
         if ($status === Payment::STATUS_CANCELLED || $status === Payment::STATUS_REJECTED) {
             if (strlen($cancellationReason) === 0) {
-                $this->addError('cancellationReason', 'The cancellation reason cannot be an empty string');
+                $this->addError(
+                    'cancellationReason',
+                    'The cancellation reason cannot be an empty string when status is cancelled or rejected'
+                );
 
                 return false;
             }
@@ -255,12 +290,13 @@ class PaymentValidator extends AbstractValidator
 
         if (empty($authorizedPayments)) {
             $this->addError('authorizedPayment', 'The authorized payment bridges cannot be empty');
+            return false;
         }
 
         if (!is_integer($authorizedPayments)) {
             $this->addError(
                 'authorizedPayment',
-                'The authorized payment bridges must be an integer'
+                'The authorized payment must be an integer'
             );
 
             return false;
@@ -276,9 +312,9 @@ class PaymentValidator extends AbstractValidator
      *
      * @return bool
      */
-    public function validateSelectedPayment($selectedPayment)
+    public function validateSelectedPayment($selectedPayment, $status)
     {
-        if (is_null($selectedPayment)) {
+        if (is_null($selectedPayment) && $status !== Payment::STATUS_SETTLED) {
             return true;
         }
 
@@ -300,15 +336,6 @@ class PaymentValidator extends AbstractValidator
      */
     public function validateContexts($context)
     {
-        // persistent collection
-        if (!$context instanceof ArrayCollection) {
-//            $this->addError(
-//                'contexts',
-//                'Context has to be and instance of \Doctrine\Common\Collections\ArrayCollection'
-//            );
-//            return false;
-        }
-
         if (!$context->isEmpty()) {
             $validator = new ContextValidator();
 

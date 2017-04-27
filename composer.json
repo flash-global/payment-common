@@ -34,6 +34,7 @@
         "ramsey/uuid": "~3.6"
     },
     "require-dev": {
+        "fei/api-server": "^1.0.0",
         "codeception/codeception": "^2.2",
         "phpro/grumphp": "^0.11.1",
         "jakub-onderka/php-parallel-lint": "^0.9.2",

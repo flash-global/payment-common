@@ -1,10 +1,8 @@
 <?php
-
 namespace Tests\Fei\Service\Payment\Entity;
 
 use Codeception\Test\Unit;
 use Doctrine\Common\Collections\ArrayCollection;
-use Fei\Entity\Validator\Exception;
 use Fei\Service\Payment\Entity\Context;
 use Fei\Service\Payment\Entity\Payment;
 use Ramsey\Uuid\Uuid;
@@ -14,200 +12,297 @@ class PaymentTest extends Unit
     public function testIdAccessors()
     {
         $payment = new Payment();
-        $result  = $payment->setId(1);
-        $this->assertInstanceOf(Payment::class, $result);
+        $payment->setId(2);
 
+        $this->assertEquals(2, $payment->getId());
         $this->assertAttributeEquals($payment->getId(), 'id', $payment);
-        $this->assertEquals(1, $payment->getId());
     }
 
     public function testUuidAccessors()
     {
         $payment = new Payment();
-        $uuid = (Uuid::uuid4())->toString();
-        $result  = $payment->setUuid($uuid);
-        $this->assertInstanceOf(Payment::class, $result);
+        $payment->setUuid('fake-uuid');
 
+        $this->assertEquals('fake-uuid', $payment->getUuid());
         $this->assertAttributeEquals($payment->getUuid(), 'uuid', $payment);
-        $this->assertEquals($uuid, $payment->getUuid());
     }
 
     public function testCreatedAtAccessors()
     {
-        $payment = new Payment();
-        $date    = new \DateTime('2017-03-01 00:00:00');
-        $result  = $payment->setCreatedAt($date);
-        $this->assertInstanceOf(Payment::class, $result);
+        $datetimeMock = $this->getMockBuilder(\DateTime::class)->getMock();
 
+        $payment = new Payment();
+        $payment->setCreatedAt($datetimeMock);
+
+        $this->assertEquals($datetimeMock, $payment->getCreatedAt());
         $this->assertAttributeEquals($payment->getCreatedAt(), 'createdAt', $payment);
-        $this->assertEquals($date, $payment->getCreatedAt());
+    }
+
+    public function testCreatedAtWhenStringIsGiven()
+    {
+        $expected = new \DateTime('2017-05-01 08:00:00');
+
+        $payment = new Payment();
+        $payment->setCreatedAt('2017-05-01 08:00:00');
+
+        $this->assertEquals($expected, $payment->getCreatedAt());
     }
 
     public function testPayedAtAccessors()
     {
-        $payment = new Payment();
-        $date    = new \DateTime('2017-03-30 00:00:00');
-        $result  = $payment->setPayedAt($date);
-        $this->assertInstanceOf(Payment::class, $result);
+        $datetimeMock = $this->getMockBuilder(\DateTime::class)->getMock();
 
+        $payment = new Payment();
+        $payment->setPayedAt($datetimeMock);
+
+        $this->assertEquals($datetimeMock, $payment->getPayedAt());
         $this->assertAttributeEquals($payment->getPayedAt(), 'payedAt', $payment);
-        $this->assertEquals($date, $payment->getPayedAt());
+    }
+
+    public function testPayedAtWhenStringIsGiven()
+    {
+        $expected = new \DateTime('2017-05-01 08:00:00');
+
+        $payment = new Payment();
+        $payment->setPayedAt('2017-05-01 08:00:00');
+
+        $this->assertEquals($expected, $payment->getPayedAt());
+    }
+
+    public function testExpirationDateAccessors()
+    {
+        $datetimeMock = $this->getMockBuilder(\DateTime::class)->getMock();
+
+        $payment = new Payment();
+        $payment->setExpirationDate($datetimeMock);
+
+        $this->assertEquals($datetimeMock, $payment->getExpirationDate());
+        $this->assertAttributeEquals($payment->getExpirationDate(), 'expirationDate', $payment);
+    }
+
+    public function testExpirationDateWhenStringIsGiven()
+    {
+        $expected = new \DateTime('2017-05-01 08:00:00');
+
+        $payment = new Payment();
+        $payment->setExpirationDate('2017-05-01 08:00:00');
+
+        $this->assertEquals($expected, $payment->getExpirationDate());
     }
 
     public function testStatusAccessors()
     {
         $payment = new Payment();
-        $status  = Payment::STATUS_PENDING;
-        $result  = $payment->setStatus($status);
-        $this->assertInstanceOf(Payment::class, $result);
+        $payment->setStatus(Payment::STATUS_CANCELLED);
 
+        $this->assertEquals(Payment::STATUS_CANCELLED, $payment->getStatus());
         $this->assertAttributeEquals($payment->getStatus(), 'status', $payment);
-        $this->assertEquals($status, $payment->getStatus());
     }
 
     public function testCancellationReasonAccessors()
     {
-        $payment            = new Payment();
-        $cancellationReason = 'My cancellation reason';
-        $result             = $payment->setCancellationReason($cancellationReason);
-        $this->assertInstanceOf(Payment::class, $result);
+        $payment = new Payment();
+        $payment->setCancellationReason('fake-reason');
 
+        $this->assertEquals('fake-reason', $payment->getCancellationReason());
         $this->assertAttributeEquals($payment->getCancellationReason(), 'cancellationReason', $payment);
-        $this->assertEquals($cancellationReason, $payment->getCancellationReason());
     }
 
     public function testRequiredPriceAccessors()
     {
         $payment = new Payment();
-        $price   = 19.99;
-        $result  = $payment->setRequiredPrice($price);
-        $this->assertInstanceOf(Payment::class, $result);
+        $payment->setRequiredPrice(3.14159);
 
+        $this->assertEquals(3.14159, $payment->getRequiredPrice());
         $this->assertAttributeEquals($payment->getRequiredPrice(), 'requiredPrice', $payment);
-        $this->assertEquals($price, $payment->getRequiredPrice());
     }
 
     public function testCapturedPriceAccessors()
     {
         $payment = new Payment();
-        $price   = 15.99;
-        $result  = $payment->setCapturedPrice($price);
-        $this->assertInstanceOf(Payment::class, $result);
+        $payment->setCapturedPrice(3.14159);
 
+        $this->assertEquals(3.14159, $payment->getCapturedPrice());
         $this->assertAttributeEquals($payment->getCapturedPrice(), 'capturedPrice', $payment);
-        $this->assertEquals($price, $payment->getCapturedPrice());
     }
 
     public function testAuthorizedPaymentAccessors()
     {
         $payment = new Payment();
-        $bridges = array(
-            Payment::PAYMENT_PAYPAL,
-            Payment::PAYMENT_CB
-        );
-        $result  = $payment->setAuthorizedPayment($bridges);
-        $this->assertInstanceOf(Payment::class, $result);
+        $payment->setAuthorizedPayment(2);
 
+        $this->assertEquals(2, $payment->getAuthorizedPayment());
         $this->assertAttributeEquals($payment->getAuthorizedPayment(), 'authorizedPayment', $payment);
-        $this->assertEquals($bridges, $payment->getAuthorizedPayment());
     }
 
     public function testSelectedPaymentAccessors()
     {
-        $payment        = new Payment();
-        $selectedBridge = Payment::PAYMENT_PAYPAL;
-        $result         = $payment->setSelectedPayment($selectedBridge);
-        $this->assertInstanceOf(Payment::class, $result);
-
-        $this->assertAttributeEquals($payment->getSelectedPayment(), 'selectedPayment', $payment);
-        $this->assertEquals($selectedBridge, $payment->getSelectedPayment());
-    }
-
-    public function testContextsAccessors()
-    {
         $payment = new Payment();
-        $context = new Context();
+        $payment->setSelectedPayment(2);
 
-        $result  = $payment->setContexts($context);
-        $this->assertInstanceOf(Payment::class, $result);
-
-        $this->assertAttributeEquals($payment->getContexts(), 'contexts', $payment);
-        $this->assertEquals(new ArrayCollection([$context]), $payment->getContexts());
-
-
-        $payment  = new Payment();
-        $context1 = new Context();
-        $context2 = new Context();
-
-        $payment->setContexts(new ArrayCollection([$context1, $context2]));
-
-        $this->assertAttributeEquals($payment->getContexts(), 'contexts', $payment);
-        $this->assertEquals(new ArrayCollection([$context1, $context2]), $payment->getContexts());
+        $this->assertEquals(2, $payment->getSelectedPayment());
+        $this->assertAttributeEquals($payment->getSelectedPayment(), 'selectedPayment', $payment);
     }
 
     public function testCallbackUrlAccessors()
     {
-        $payment     = new Payment();
-        $callbackUrl = array(
-            Payment::CALLBACK_URL_SUCCEEDED => "http://test.fr",
-            Payment::CALLBACK_URL_FAILED    => "http://test.fr/failed",
-            Payment::CALLBACK_URL_CANCELED  => "http://test.fr/canceled",
-            Payment::CALLBACK_URL_SAVED     => "http://test.fr/saved",
-        );
-        $result = $payment->setCallbackUrl($callbackUrl);
-        $this->assertInstanceOf(Payment::class, $result);
+        $payment = new Payment();
+        $payment->setCallbackUrl(['saved' => 'fake-url']);
 
+        $this->assertEquals(['saved' => 'fake-url'], $payment->getCallbackUrl());
         $this->assertAttributeEquals($payment->getCallbackUrl(), 'callbackUrl', $payment);
-        $this->assertEquals($callbackUrl, $payment->getCallbackUrl());
+    }
 
+    public function testSetCallbackUrlEvent()
+    {
+        $payment = new Payment();
+        $payment->setCallbackUrlEvent(Payment::CALLBACK_URL_SAVED, 'http://fake-url');
 
-        $callbackUrlSucceeded = 'http://test.fr/succeeded';
-        $payment->setCallbackUrlEvent(Payment::CALLBACK_URL_SUCCEEDED, $callbackUrlSucceeded);
-        $this->assertEquals($callbackUrlSucceeded, $payment->getCallbackUrl()[Payment::CALLBACK_URL_SUCCEEDED]);
+        $expected = $payment->getCallbackUrl();
 
+        $this->assertEquals('http://fake-url', $expected[Payment::CALLBACK_URL_SAVED]);
+    }
 
-        $this->expectException(Exception::class);
-        $payment->setCallbackUrlEvent('test', 'http://test.fr/test');
+    public function testSetCallbackUrlEventWhenEventDoesNotExists()
+    {
+        $payment = new Payment();
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Payment callback URL event not-existing-event is undefined.');
+
+        $payment->setCallbackUrlEvent('not-existing-event', 'http://fake-url');
+    }
+
+    public function testContextsAccessors()
+    {
+
+        $payment = new Payment();
+        $arrayCollection = new ArrayCollection([new Context(['key' => 'value'])]);
+        $payment->setContexts($arrayCollection);
+
+        $this->assertEquals($arrayCollection, $payment->getContexts());
+        $this->assertAttributeEquals($payment->getContexts(), 'contexts', $payment);
+    }
+
+    public function testSetContextsWhenInstanceOfContext()
+    {
+        $context = (new Context())
+            ->setKey('key')
+            ->setValue('val');
+
+        $payment = new Payment();
+        $payment->setContexts($context);
+
+        $ar = new ArrayCollection();
+        $ar->add($context);
+
+        $this->assertEquals($ar, $payment->getContexts());
+    }
+
+    public function testSetContextsWhenArrayIsGiven()
+    {
+        $payment = new Payment();
+        $payment->setContexts(['key' => 'value']);
+
+        $ar = new ArrayCollection();
+        $ar->add(
+            (new Context())
+                ->setKey('key')
+                ->setValue('value')
+                ->setPayment($payment)
+        );
+
+        $this->assertEquals($ar, $payment->getContexts());
     }
 
     public function testGetStatuses()
     {
-        $this->assertEquals(
-            [
-                Payment::STATUS_PENDING => 'Pending',
-                Payment::STATUS_CANCELLED => 'Cancelled',
-                Payment::STATUS_REJECTED => 'Rejected',
-                Payment::STATUS_AUTHORIZED => 'Authorized',
-                Payment::STATUS_REFUSED => 'Refused',
-                Payment::STATUS_OUTDATED => 'Outdated',
-                Payment::STATUS_ERRORED => 'Errored',
-                Payment::STATUS_SETTLED => 'Settled'
-            ],
-            Payment::getStatuses()
-        );
+        $this->assertEquals([
+            Payment::STATUS_PENDING => 'Pending',
+            Payment::STATUS_CANCELLED => 'Cancelled',
+            Payment::STATUS_REJECTED => 'Rejected',
+            Payment::STATUS_AUTHORIZED => 'Authorized',
+            Payment::STATUS_REFUSED => 'Refused',
+            Payment::STATUS_OUTDATED => 'Outdated',
+            Payment::STATUS_ERRORED => 'Errored',
+            Payment::STATUS_SETTLED => 'Settled'
+        ], Payment::getStatuses());
+    }
+
+    public function testGetAuthorizedPayments()
+    {
+        $this->assertEquals([
+            Payment::PAYMENT_PAYPAL => 'Paypal',
+            Payment::PAYMENT_STRIPE => 'Stripe',
+            Payment::PAYMENT_OGONE => 'Ogone',
+            Payment::PAYMENT_PAYZEN => 'Payzen'
+        ], Payment::getAutorizedPayments());
     }
 
     public function testGetPaymentBridges()
     {
-        $this->assertEquals(
-            array(
-                Payment::PAYMENT_PAYPAL,
-                Payment::PAYMENT_CB
-            ),
-            Payment::getPaymentBridges()
-        );
+        $this->assertEquals([
+            Payment::PAYMENT_PAYPAL,
+            Payment::PAYMENT_STRIPE,
+            Payment::PAYMENT_OGONE,
+            Payment::PAYMENT_PAYZEN
+        ], Payment::getPaymentBridges());
     }
 
     public function testGetCallbackUrlEvents()
     {
-        $this->assertEquals(
-            array(
-                Payment::CALLBACK_URL_SUCCEEDED,
-                Payment::CALLBACK_URL_FAILED,
-                Payment::CALLBACK_URL_SAVED,
-                Payment::CALLBACK_URL_CANCELED
-            ),
-            Payment::getCallbackUrlEvents()
-        );
+        $this->assertEquals([
+            Payment::CALLBACK_URL_SUCCEEDED,
+            Payment::CALLBACK_URL_FAILED,
+            Payment::CALLBACK_URL_SAVED,
+            Payment::CALLBACK_URL_CANCELED
+        ], Payment::getCallbackUrlEvents());
+    }
+
+    public function testToArray()
+    {
+        $date = new \DateTime('2017-05-01 08:00:00');
+        $uuid = (Uuid::uuid4())->toString();
+
+        $payment = new Payment();
+        $payment->setId(1)
+            ->setUuid($uuid)
+            ->setCreatedAt($date)
+            ->setPayedAt($date)
+            ->setExpirationDate($date)
+            ->setStatus(Payment::STATUS_CANCELLED)
+            ->setCancellationReason('fake-reason')
+            ->setRequiredPrice(3.14159)
+            ->setCapturedPrice(2)
+            ->setAuthorizedPayment(1)
+            ->setSelectedPayment(1)
+            ->setContexts(
+                (new Context())
+                    ->setKey('key')
+                    ->setValue('value')
+            )
+            ->setCallbackUrl([
+                'saved' => 'http://fake-url'
+            ]);
+
+        $this->assertEquals([
+            'id' => 1,
+            'uuid' => $uuid,
+            'createdAt' => $date->format('c'),
+            'payedAt' => $date->format('c'),
+            'expirationDate' => $date->format('c'),
+            'status' => Payment::STATUS_CANCELLED,
+            'cancellationReason' => 'fake-reason',
+            'requiredPrice' => 3.14159,
+            'capturedPrice' => 2,
+            'authorizedPayment' => 1,
+            'selectedPayment' => 1,
+            'contexts' => [
+                'key' => 'value'
+            ],
+            'callbackUrl' => [
+                'saved' => 'http://fake-url'
+            ],
+        ], $payment->toArray());
     }
 }

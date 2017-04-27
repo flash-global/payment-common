@@ -7,40 +7,42 @@ use Fei\Service\Payment\Entity\Payment;
 
 class ContextTest extends Unit
 {
-    public function testId()
+    public function testIdAccessors()
     {
         $context = new Context();
-        $context->setId(1);
+        $context->setId(2);
 
-        $this->assertEquals(1, $context->getId());
+        $this->assertEquals(2, $context->getId());
         $this->assertAttributeEquals($context->getId(), 'id', $context);
     }
 
-    public function testKey()
+    public function testKeyAccessors()
     {
         $context = new Context();
-        $context->setKey(1);
+        $context->setKey('fake-key');
 
-        $this->assertEquals(1, $context->getKey());
+        $this->assertEquals('fake-key', $context->getKey());
         $this->assertAttributeEquals($context->getKey(), 'key', $context);
     }
 
-    public function testValue()
+    public function testValueAccessors()
     {
         $context = new Context();
-        $context->setValue(1);
+        $context->setValue('fake-value');
 
-        $this->assertEquals(1, $context->getValue());
+        $this->assertEquals('fake-value', $context->getValue());
         $this->assertAttributeEquals($context->getValue(), 'value', $context);
     }
 
-    public function testPayment()
+    public function testPaymentAccessors()
     {
-        $expected = new Payment();
-        $context  = new Context();
-        $context->setPayment($expected);
+        /** @var Payment $paymentMock */
+        $paymentMock = $this->getMockBuilder(Payment::class)->getMock();
 
-        $this->assertEquals($expected, $context->getPayment());
+        $context = new Context();
+        $context->setPayment($paymentMock);
+
+        $this->assertEquals($paymentMock, $context->getPayment());
         $this->assertAttributeEquals($context->getPayment(), 'payment', $context);
     }
 }

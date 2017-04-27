@@ -12,8 +12,9 @@ class PaymentTransformer extends TransformerAbstract
 {
     public function transform(Payment $payment)
     {
-        $contextItems = array();
+        $contextItems = [];
 
+        /** @var Context $contextItem */
         foreach ($payment->getContexts() as $contextItem) {
             $contextItems[$contextItem->getKey()] = $contextItem->getValue();
         }

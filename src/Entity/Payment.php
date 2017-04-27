@@ -144,7 +144,7 @@ class Payment extends AbstractEntity
     public function __construct($data = null)
     {
         $this->setUuid((Uuid::uuid4())->toString());
-        $this->setStatus(Payment::STATUS_PENDING);
+        $this->setStatus(self::STATUS_PENDING);
         $this->setCreatedAt(new \DateTime());
         $this->setAuthorizedPayment(0);
         $this->setContexts(new ArrayCollection());
@@ -254,7 +254,7 @@ class Payment extends AbstractEntity
     /**
      * Set ExpirationDate
      *
-     * @param \DateTime $expirationDate
+     * @param \DateTime|string $expirationDate
      *
      * @return $this
      */
@@ -425,10 +425,6 @@ class Payment extends AbstractEntity
             }
         }
 
-        if (is_null($this->contexts)) {
-            $this->contexts = new ArrayCollection();
-        }
-
         return $this;
     }
 
@@ -483,14 +479,14 @@ class Payment extends AbstractEntity
     public static function getStatuses()
     {
         return [
-            Payment::STATUS_PENDING => 'Pending',
-            Payment::STATUS_CANCELLED => 'Cancelled',
-            Payment::STATUS_REJECTED => 'Rejected',
-            Payment::STATUS_AUTHORIZED => 'Authorized',
-            Payment::STATUS_REFUSED => 'Refused',
-            Payment::STATUS_OUTDATED => 'Outdated',
-            Payment::STATUS_ERRORED => 'Errored',
-            Payment::STATUS_SETTLED => 'Settled'
+            self::STATUS_PENDING => 'Pending',
+            self::STATUS_CANCELLED => 'Cancelled',
+            self::STATUS_REJECTED => 'Rejected',
+            self::STATUS_AUTHORIZED => 'Authorized',
+            self::STATUS_REFUSED => 'Refused',
+            self::STATUS_OUTDATED => 'Outdated',
+            self::STATUS_ERRORED => 'Errored',
+            self::STATUS_SETTLED => 'Settled'
         ];
     }
 
@@ -513,10 +509,10 @@ class Payment extends AbstractEntity
     public static function getPaymentBridges()
     {
         return [
-            Payment::PAYMENT_PAYPAL,
-            Payment::PAYMENT_STRIPE,
-            Payment::PAYMENT_OGONE,
-            Payment::PAYMENT_PAYZEN
+            self::PAYMENT_PAYPAL,
+            self::PAYMENT_STRIPE,
+            self::PAYMENT_OGONE,
+            self::PAYMENT_PAYZEN
         ];
     }
 
@@ -526,10 +522,10 @@ class Payment extends AbstractEntity
     public static function getCallbackUrlEvents()
     {
         return [
-            Payment::CALLBACK_URL_SUCCEEDED,
-            Payment::CALLBACK_URL_FAILED,
-            Payment::CALLBACK_URL_SAVED,
-            Payment::CALLBACK_URL_CANCELED
+            self::CALLBACK_URL_SUCCEEDED,
+            self::CALLBACK_URL_FAILED,
+            self::CALLBACK_URL_SAVED,
+            self::CALLBACK_URL_CANCELED
         ];
     }
 
