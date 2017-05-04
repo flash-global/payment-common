@@ -43,7 +43,7 @@ class PaymentValidator extends AbstractValidator
         $this->validateUuid($entity->getUuid());
         $this->validateCreatedAt($entity->getCreatedAt());
         $this->validatePayedAt($entity->getPayedAt(), $entity->getStatus());
-        $this->validateExpirationDate($entity->getPayedAt());
+        $this->validateExpirationDate($entity->getExpirationDate());
         $this->validateStatus($entity->getStatus());
         $this->validateCancellationReason($entity->getCancellationReason(), $entity);
         $this->validateRequiredPrice($entity->getRequiredPrice());
