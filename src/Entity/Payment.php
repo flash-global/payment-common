@@ -450,7 +450,7 @@ class Payment extends AbstractEntity
 
     /**
      * @param $event
-     * @param $callbackUrl
+     * @param $callbackUrlk
      *
      * @return Payment
      * @throws Exception

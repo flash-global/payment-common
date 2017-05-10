@@ -2,6 +2,7 @@
 namespace Tests\Fei\Service\Payment\Entity;
 
 use Codeception\Test\Unit;
+use Codeception\Util\Stub;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Payment\Entity\Context;
 use Fei\Service\Payment\Entity\Payment;
@@ -263,5 +264,148 @@ class PaymentValidatorTest extends Unit
         $this->assertTrue($validator->validateSelectedPayment(null, Payment::STATUS_PENDING));
 
         $this->assertTrue((new PaymentValidator('create'))->validateSelectedPayment(1, Payment::STATUS_PENDING));
+    }
+
+    public function testValidateContextsWhenEmpty()
+    {
+        $validator = new PaymentValidator('create');
+
+        $this->assertTrue($validator->validateContexts(new ArrayCollection()));
+    }
+
+    public function testValidateContextsWhenNotEmpty()
+    {
+        $validator = new PaymentValidator('create');
+
+        $contexts = new ArrayCollection([
+            new Context([
+                'key' => 'key 1',
+                'value' => 'value 1'
+            ]),
+
+            new Context([
+                'key' => 'key 2',
+                'value' => 'value 2'
+            ])
+        ]);
+        $this->assertTrue($validator->validateContexts($contexts));
+
+        $contexts = new ArrayCollection([
+            new Context([
+                'key' => 'key 1',
+                'value' => 'value 1'
+            ]),
+
+            new Context()
+        ]);
+        
+        $this->assertFalse($validator->validateContexts($contexts));
+
+        $this->assertEquals([
+            'contexts' => ['key: The key cannot be empty; value: The value cannot be empty']
+        ], $validator->getErrors());
+    }
+
+    public function testValidateCallbackUrlWhenNotAnArray()
+    {
+        $validator = new PaymentValidator('create');
+
+        $validation = $validator->validateCallbackUrl('fake-cb');
+
+        $this->assertFalse($validation);
+        $this->assertEquals([
+            'callbackUrl' => ['The callback URL must be an array']
+        ], $validator->getErrors());
+    }
+
+    public function testValidateCallbackUrlWhenArrayIsEmpty()
+    {
+        $validator = new PaymentValidator('create');
+
+        $validation = $validator->validateCallbackUrl([]);
+
+        $this->assertFalse($validation);
+        $this->assertEquals([
+            'callbackUrl' => ['The callback URL cannot be empty']
+        ], $validator->getErrors());
+    }
+
+    public function testValidateCallbackUrlWhenEventsAreNotValid()
+    {
+        $validator = new PaymentValidator('create');
+
+        $validation = $validator->validateCallbackUrl([
+            'fake-event' => 'http://url.fr'
+        ]);
+
+        $this->assertFalse($validation);
+        $this->assertEquals([
+            'callbackUrl' => [
+                'The callback URL fake-event is not an authorized value : ' .
+                implode(', ', Payment::getCallbackUrlEvents())
+            ]
+        ], $validator->getErrors());
+    }
+
+    public function testValidateCallbackUrlWhenRequiredEventsAreNotSet()
+    {
+        $validator = new PaymentValidator('create');
+
+        $validation = $validator->validateCallbackUrl([
+            Payment::CALLBACK_URL_SAVED => 'http://url-saved.fr'
+        ]);
+
+        $this->assertFalse($validation);
+        $this->assertEquals([
+            'callbackUrl' => [
+                'The callback URL for the events saved and cancelled has to be defined'
+            ]
+        ], $validator->getErrors());
+    }
+
+    public function testValidateCallbackUrlWhenValid()
+    {
+        $validator = new PaymentValidator('create');
+
+        $validation = $validator->validateCallbackUrl([
+            Payment::CALLBACK_URL_SAVED => 'http://url-saved.fr',
+            Payment::CALLBACK_URL_CANCELED => 'http://url-cancelled.fr'
+        ]);
+
+        $this->assertTrue($validation);
+        $this->assertEmpty($validator->getErrors());
+    }
+
+    public function testValidateWhenNotInstanceOfPayment()
+    {
+        $validator = new PaymentValidator('create');
+
+        $this->expectExceptionMessage('The entity to validate must be an instance of ' . Payment::class);
+        $validator->validate(new Context());
+    }
+
+    public function testValidate()
+    {
+        /** @var PaymentValidator $validator */
+        $validator = Stub::make(PaymentValidator::class, [
+            'validateId' => true,
+            'validateUuid' => true,
+            'validateCreatedAt' => true,
+            'validatePayedAt' => true,
+            'validateExpirationDate' => true,
+            'validateStatus' => true,
+            'validateCancellationReason' => true,
+            'validateRequiredPrice' => true,
+            'validateCapturedPrice' => true,
+            'validateAuthorizedPayment' => true,
+            'validateSelectedPayment' => true,
+            'validateContexts' => true,
+            'validateCallbackUrl' => true,
+            'getError' => []
+        ]);
+
+        $validator->validate(
+            $this->getMockBuilder(Payment::class)->getMock()
+        );
     }
 }
