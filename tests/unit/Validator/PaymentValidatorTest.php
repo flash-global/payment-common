@@ -298,7 +298,7 @@ class PaymentValidatorTest extends Unit
 
             new Context()
         ]);
-        
+
         $this->assertFalse($validator->validateContexts($contexts));
 
         $this->assertEquals([
@@ -404,8 +404,8 @@ class PaymentValidatorTest extends Unit
             'getError' => []
         ]);
 
-        $validator->validate(
+        $this->assertTrue($validator->validate(
             $this->getMockBuilder(Payment::class)->getMock()
-        );
+        ));
     }
 }

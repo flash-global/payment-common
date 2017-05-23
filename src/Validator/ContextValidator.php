@@ -68,12 +68,6 @@ class ContextValidator extends AbstractValidator
             return false;
         }
 
-        if (mb_strlen($value, 'UTF-8') > 255) {
-            $this->addError('value', 'The value length has to be less or equal to 255');
-
-            return false;
-        }
-
         return true;
     }
 }

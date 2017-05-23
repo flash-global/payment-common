@@ -64,10 +64,7 @@ class ContextValidatorTest extends Unit
 
         $validation = $validator->validateValue(str_pad('MyValue', 300, '0'));
 
-        $this->assertFalse($validation);
-        $this->assertEquals([
-            'value' => ['The value length has to be less or equal to 255']
-        ], $validator->getErrors());
+        $this->assertTrue($validation);
     }
 
     public function testValidateValue()

@@ -2,7 +2,6 @@
 
 namespace Fei\Service\Payment\Validator;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Entity\EntityInterface;
 use Fei\Entity\Validator\AbstractValidator;
 use Fei\Entity\Validator\Exception;
@@ -12,6 +11,8 @@ use Fei\Service\Payment\Entity\Payment;
  * Class PaymentValidator
  *
  * @package Fei\Service\Payment\Validator
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class PaymentValidator extends AbstractValidator
 {
@@ -127,7 +128,7 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validate payedAt
      *
-     * @param $payedAt
+     * @param mixed $payedAt
      *
      * @return bool
      */
@@ -149,7 +150,7 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validate expirationDate
      *
-     * @param $expirationDate
+     * @param mixed $expirationDate
      *
      * @return bool
      */
@@ -167,7 +168,7 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validate status
      *
-     * @param $status
+     * @param mixed $status
      *
      * @return bool
      */
@@ -194,7 +195,7 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validate cancellationReason
      *
-     * @param $cancellationReason
+     * @param mixed $cancellationReason
      * @param Payment $payment
      *
      * @return bool
@@ -219,7 +220,7 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validator requiredPrice
      *
-     * @param $requiredPrice
+     * @param mixed $requiredPrice
      *
      * @return bool
      */
@@ -249,7 +250,7 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validator capturedPrice
      *
-     * @param $capturedPrice
+     * @param mixed $capturedPrice
      * @param Payment $payment
      *
      * @return bool
@@ -281,7 +282,7 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validator authorizedPayment
      *
-     * @param $authorizedPayments
+     * @param mixed $authorizedPayments
      *
      * @return bool
      */
@@ -308,7 +309,7 @@ class PaymentValidator extends AbstractValidator
     /**
      * Validator selectedPayment
      *
-     * @param $selectedPayment
+     * @param mixed $selectedPayment
      *
      * @return bool
      */
