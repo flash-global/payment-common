@@ -36,7 +36,6 @@ class Payment extends AbstractEntity
     // Payment callback URL key
     const CALLBACK_URL_SUCCEEDED = "succeeded";
     const CALLBACK_URL_FAILED    = "failed";
-    const CALLBACK_URL_SAVED     = "saved";
     const CALLBACK_URL_CANCELED  = "cancelled";
 
     /**
@@ -460,7 +459,6 @@ class Payment extends AbstractEntity
         $callbackUrlEvents = [
             self::CALLBACK_URL_SUCCEEDED,
             self::CALLBACK_URL_FAILED,
-            self::CALLBACK_URL_SAVED,
             self::CALLBACK_URL_CANCELED
         ];
 
@@ -524,7 +522,6 @@ class Payment extends AbstractEntity
         return [
             self::CALLBACK_URL_SUCCEEDED,
             self::CALLBACK_URL_FAILED,
-            self::CALLBACK_URL_SAVED,
             self::CALLBACK_URL_CANCELED
         ];
     }

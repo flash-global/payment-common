@@ -352,13 +352,13 @@ class PaymentValidatorTest extends Unit
         $validator = new PaymentValidator('create');
 
         $validation = $validator->validateCallbackUrl([
-            Payment::CALLBACK_URL_SAVED => 'http://url-saved.fr'
+            Payment::CALLBACK_URL_FAILED => 'http://url-failed.fr'
         ]);
 
         $this->assertFalse($validation);
         $this->assertEquals([
             'callbackUrl' => [
-                'The callback URL for the events saved and cancelled has to be defined'
+                'The callback URL for the event cancelled has to be defined'
             ]
         ], $validator->getErrors());
     }
@@ -368,7 +368,6 @@ class PaymentValidatorTest extends Unit
         $validator = new PaymentValidator('create');
 
         $validation = $validator->validateCallbackUrl([
-            Payment::CALLBACK_URL_SAVED => 'http://url-saved.fr',
             Payment::CALLBACK_URL_CANCELED => 'http://url-cancelled.fr'
         ]);
 

@@ -32,7 +32,7 @@ class PaymentTransformerTest extends Unit
                     ->setValue('value')
             )
             ->setCallbackUrl([
-                'saved' => 'http://fake-url'
+                'failed' => 'http://fake-url'
             ]);
 
         $transformer = new PaymentTransformer();
@@ -53,7 +53,7 @@ class PaymentTransformerTest extends Unit
                 'key' => 'value'
             ],
             'callbackUrl' => [
-                'saved' => 'http://fake-url'
+                'failed' => 'http://fake-url'
             ],
         ], $transformer->transform($payment));
     }

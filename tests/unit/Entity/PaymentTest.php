@@ -147,20 +147,20 @@ class PaymentTest extends Unit
     public function testCallbackUrlAccessors()
     {
         $payment = new Payment();
-        $payment->setCallbackUrl(['saved' => 'fake-url']);
+        $payment->setCallbackUrl(['failed' => 'fake-url']);
 
-        $this->assertEquals(['saved' => 'fake-url'], $payment->getCallbackUrl());
+        $this->assertEquals(['failed' => 'fake-url'], $payment->getCallbackUrl());
         $this->assertAttributeEquals($payment->getCallbackUrl(), 'callbackUrl', $payment);
     }
 
     public function testSetCallbackUrlEvent()
     {
         $payment = new Payment();
-        $payment->setCallbackUrlEvent(Payment::CALLBACK_URL_SAVED, 'http://fake-url');
+        $payment->setCallbackUrlEvent(Payment::CALLBACK_URL_CANCELED, 'http://fake-url');
 
         $expected = $payment->getCallbackUrl();
 
-        $this->assertEquals('http://fake-url', $expected[Payment::CALLBACK_URL_SAVED]);
+        $this->assertEquals('http://fake-url', $expected[Payment::CALLBACK_URL_CANCELED]);
     }
 
     public function testSetCallbackUrlEventWhenEventDoesNotExists()
@@ -254,7 +254,6 @@ class PaymentTest extends Unit
         $this->assertEquals([
             Payment::CALLBACK_URL_SUCCEEDED,
             Payment::CALLBACK_URL_FAILED,
-            Payment::CALLBACK_URL_SAVED,
             Payment::CALLBACK_URL_CANCELED
         ], Payment::getCallbackUrlEvents());
     }
@@ -282,7 +281,7 @@ class PaymentTest extends Unit
                     ->setValue('value')
             )
             ->setCallbackUrl([
-                'saved' => 'http://fake-url'
+                'failed' => 'http://fake-url'
             ]);
 
         $this->assertEquals([
@@ -301,7 +300,7 @@ class PaymentTest extends Unit
                 'key' => 'value'
             ],
             'callbackUrl' => [
-                'saved' => 'http://fake-url'
+                'failed' => 'http://fake-url'
             ],
         ], $payment->toArray());
     }

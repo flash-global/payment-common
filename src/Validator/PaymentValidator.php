@@ -390,10 +390,10 @@ class PaymentValidator extends AbstractValidator
             }
         }
 
-        if (empty($callbackUrl[Payment::CALLBACK_URL_SAVED]) || empty($callbackUrl[Payment::CALLBACK_URL_CANCELED])) {
+        if (empty($callbackUrl[Payment::CALLBACK_URL_CANCELED])) {
             $this->addError(
                 'callbackUrl',
-                'The callback URL for the events saved and cancelled has to be defined'
+                'The callback URL for the event cancelled has to be defined'
             );
 
             return false;
