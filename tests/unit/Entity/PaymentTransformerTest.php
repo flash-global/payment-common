@@ -26,6 +26,7 @@ class PaymentTransformerTest extends Unit
             ->setCapturedPrice(2)
             ->setAuthorizedPayment(1)
             ->setSelectedPayment(1)
+            ->setVat(0.2)
             ->setContexts(
                 (new Context())
                     ->setKey('key')
@@ -49,6 +50,7 @@ class PaymentTransformerTest extends Unit
             'capturedPrice' => 2,
             'authorizedPayment' => 1,
             'selectedPayment' => 1,
+            'vat' => 0.2,
             'contexts' => [
                 'key' => 'value'
             ],

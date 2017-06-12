@@ -33,6 +33,7 @@ class PaymentTransformer extends TransformerAbstract
             'capturedPrice' => $payment->getCapturedPrice(),
             'authorizedPayment' => $payment->getAuthorizedPayment(),
             'selectedPayment' => $payment->getSelectedPayment(),
+            'vat' => $payment->getVat(),
             'contexts' => $contextItems,
             'callbackUrl' => $payment->getCallbackUrl()
         ];

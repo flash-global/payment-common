@@ -53,6 +53,7 @@ class PaymentValidator extends AbstractValidator
         $this->validateSelectedPayment($entity->getSelectedPayment(), $entity->getStatus());
         $this->validateContexts($entity->getContexts());
         $this->validateCallbackUrl($entity->getCallbackUrl());
+        $this->validateVat($entity->getVat());
 
         return empty($this->getErrors());
     }
@@ -395,6 +396,34 @@ class PaymentValidator extends AbstractValidator
                 'callbackUrl',
                 'The callback URL for the event cancelled has to be defined'
             );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validator vat
+     *
+     * @param mixed $vat
+     *
+     * @return bool
+     */
+    public function validateVat($vat)
+    {
+        if (!is_numeric($vat)) {
+            $this->addError('vat', 'The VAT must be between 0 and 1');
+            return false;
+        }
+
+        if ($vat < 0) {
+            $this->addError('vat', 'The VAT must be higher than or equals to 0');
+            return false;
+        }
+
+        if ($vat > 1) {
+            $this->addError('vat', 'The VAT must be lower than or equals to 1');
 
             return false;
         }

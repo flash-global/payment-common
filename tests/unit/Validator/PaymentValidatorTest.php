@@ -400,11 +400,48 @@ class PaymentValidatorTest extends Unit
             'validateSelectedPayment' => true,
             'validateContexts' => true,
             'validateCallbackUrl' => true,
+            'validateVat' => true,
             'getError' => []
         ]);
 
         $this->assertTrue($validator->validate(
             $this->getMockBuilder(Payment::class)->getMock()
         ));
+    }
+
+    public function testValidateVat()
+    {
+        $this->assertTrue((new PaymentValidator('create'))->validateVat(0));
+        $this->assertTrue((new PaymentValidator('create'))->validateVat(0.01));
+        $this->assertTrue((new PaymentValidator('create'))->validateVat(1));
+        $this->assertFalse((new PaymentValidator('create'))->validateVat(-0.99));
+        $this->assertFalse((new PaymentValidator('create'))->validateVat(1.01));
+
+        $validator = new PaymentValidator('update');
+        $this->assertFalse($validator->validateVat('wrong'));
+        $this->assertCount(1, $validator->getErrors());
+        $this->assertCount(1, $validator->getErrors()['vat']);
+        $this->assertEquals(
+            'The VAT must be between 0 and 1',
+            reset($validator->getErrors()['vat'])
+        );
+
+        $validator = new PaymentValidator('update');
+        $this->assertFalse($validator->validateVat(12));
+        $this->assertCount(1, $validator->getErrors());
+        $this->assertCount(1, $validator->getErrors()['vat']);
+        $this->assertEquals(
+            'The VAT must be lower than or equals to 1',
+            reset($validator->getErrors()['vat'])
+        );
+
+        $validator = new PaymentValidator('create');
+        $this->assertFalse($validator->validateVat(-3));
+        $this->assertCount(1, $validator->getErrors());
+        $this->assertCount(1, $validator->getErrors()['vat']);
+        $this->assertEquals(
+            'The VAT must be higher than or equals to 0',
+            reset($validator->getErrors()['vat'])
+        );
     }
 }

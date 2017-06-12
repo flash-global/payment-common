@@ -138,6 +138,13 @@ class Payment extends AbstractEntity
     protected $callbackUrl;
 
     /**
+     * @var float
+     *
+     * @Column(type="float")
+     */
+    protected $vat;
+
+    /**
      * {@inheritdoc}
      */
     public function __construct($data = null)
@@ -148,6 +155,7 @@ class Payment extends AbstractEntity
         $this->setAuthorizedPayment(0);
         $this->setContexts(new ArrayCollection());
         $this->setCallbackUrl([]);
+        $this->setVat(0);
 
         parent::__construct($data);
     }
@@ -468,6 +476,28 @@ class Payment extends AbstractEntity
 
         $this->callbackUrl[$event] = $callbackUrl;
 
+        return $this;
+    }
+
+    /**
+     * Get the Payment's Vat.
+     *
+     * @return float
+     */
+    public function getVat()
+    {
+        return $this->vat;
+    }
+
+    /**
+     * Set the Payment's Vat.
+     *
+     * @param float $vat
+     * @return $this
+     */
+    public function setVat($vat)
+    {
+        $this->vat = $vat;
         return $this;
     }
 
