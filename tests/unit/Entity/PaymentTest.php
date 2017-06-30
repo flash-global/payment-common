@@ -275,6 +275,7 @@ class PaymentTest extends Unit
             ->setCapturedPrice(2)
             ->setAuthorizedPayment(1)
             ->setSelectedPayment(1)
+            ->setVat(0.2)
             ->setContexts(
                 (new Context())
                     ->setKey('key')
@@ -296,6 +297,7 @@ class PaymentTest extends Unit
             'capturedPrice' => 2,
             'authorizedPayment' => 1,
             'selectedPayment' => 1,
+            'vat' => 0.2,
             'contexts' => [
                 'key' => 'value'
             ],
@@ -303,5 +305,24 @@ class PaymentTest extends Unit
                 'failed' => 'http://fake-url'
             ],
         ], $payment->toArray());
+    }
+
+    /**
+     * @dataProvider getDataForVatFunction
+     */
+    public function testVatAccessors($vat)
+    {
+        $payment = new Payment();
+        $payment->setVat($vat);
+
+        $this->assertEquals($vat, $payment->getVat());
+        $this->assertAttributeEquals($payment->getVat(), 'vat', $payment);
+    }
+
+    public function getDataForVatFunction()
+    {
+        return [
+            [0], [1], [0.5], [-1], [-2.01]
+        ];
     }
 }
