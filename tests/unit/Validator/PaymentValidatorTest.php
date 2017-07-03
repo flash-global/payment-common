@@ -368,11 +368,45 @@ class PaymentValidatorTest extends Unit
         $validator = new PaymentValidator('create');
 
         $validation = $validator->validateCallbackUrl([
-            Payment::CALLBACK_URL_CANCELED => 'http://url-cancelled.fr'
+            Payment::CALLBACK_URL_CANCELED => 'http://url-cancelled.fr',
+            Payment::CALLBACK_URL_SAVED => 'http://url-saved.eu'
         ]);
 
         $this->assertTrue($validation);
         $this->assertEmpty($validator->getErrors());
+    }
+
+    public function testValidateCallbackUrlWhenSavedMissing()
+    {
+        $validator = new PaymentValidator('create');
+
+        $validation = $validator->validateCallbackUrl([
+            Payment::CALLBACK_URL_CANCELED => 'http://url-cancelled.fr',
+        ]);
+
+        $this->assertFalse($validation);
+        $this->assertEquals([
+            'callbackUrl' => [
+                'The callback URL for the event saved has to be defined'
+            ]
+        ], $validator->getErrors());
+    }
+
+    public function testValidateCallbackUrlWhenSavedNotValid()
+    {
+        $validator = new PaymentValidator('create');
+
+        $validation = $validator->validateCallbackUrl([
+            Payment::CALLBACK_URL_CANCELED => 'http://url-cancelled.fr',
+            Payment::CALLBACK_URL_SAVED => 'url-saved',
+        ]);
+
+        $this->assertFalse($validation);
+        $this->assertEquals([
+            'callbackUrl' => [
+                'The callback URL for the event saved has to be a valid URL'
+            ]
+        ], $validator->getErrors());
     }
 
     public function testValidateWhenNotInstanceOfPayment()
