@@ -400,6 +400,25 @@ class PaymentValidator extends AbstractValidator
             return false;
         }
 
+        if (empty($callbackUrl[Payment::CALLBACK_URL_SAVED])) {
+            $this->addError(
+                'callbackUrl',
+                'The callback URL for the event saved has to be defined'
+            );
+
+            return false;
+        } else {
+            $savedCallback = $callbackUrl[Payment::CALLBACK_URL_SAVED];
+            if (filter_var($savedCallback, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED) === false) {
+                $this->addError(
+                    'callbackUrl',
+                    'The callback URL for the event saved has to be a valid URL'
+                );
+
+                return false;
+            }
+        }
+
         return true;
     }
 

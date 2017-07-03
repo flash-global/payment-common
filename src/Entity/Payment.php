@@ -37,6 +37,7 @@ class Payment extends AbstractEntity
     const CALLBACK_URL_SUCCEEDED = "succeeded";
     const CALLBACK_URL_FAILED    = "failed";
     const CALLBACK_URL_CANCELED  = "cancelled";
+    const CALLBACK_URL_SAVED  = "saved";
 
     /**
      * @var int
@@ -215,11 +216,7 @@ class Payment extends AbstractEntity
      */
     public function setCreatedAt($createdAt)
     {
-        if (is_string($createdAt)) {
-            $createdAt = new \DateTime($createdAt);
-        }
-
-        $this->createdAt = $createdAt;
+        $this->createdAt = $this->parseDate($createdAt);
 
         return $this;
     }
@@ -239,11 +236,7 @@ class Payment extends AbstractEntity
      */
     public function setPayedAt($payedAt)
     {
-        if (is_string($payedAt)) {
-            $payedAt = new \DateTime($payedAt);
-        }
-
-        $this->payedAt = $payedAt;
+        $this->payedAt = $this->parseDate($payedAt);
 
         return $this;
     }
@@ -267,11 +260,7 @@ class Payment extends AbstractEntity
      */
     public function setExpirationDate($expirationDate)
     {
-        if (is_string($expirationDate)) {
-            $expirationDate = new \DateTime($expirationDate);
-        }
-
-        $this->expirationDate = $expirationDate;
+        $this->expirationDate = $this->parseDate($expirationDate);
 
         return $this;
     }
@@ -464,11 +453,7 @@ class Payment extends AbstractEntity
      */
     public function setCallbackUrlEvent($event, $callbackUrl)
     {
-        $callbackUrlEvents = [
-            self::CALLBACK_URL_SUCCEEDED,
-            self::CALLBACK_URL_FAILED,
-            self::CALLBACK_URL_CANCELED
-        ];
+        $callbackUrlEvents = $this->getCallbackUrlEvents();
 
         if (!in_array($event, $callbackUrlEvents)) {
             throw new Exception('Payment callback URL event ' . $event . ' is undefined.');
@@ -552,7 +537,8 @@ class Payment extends AbstractEntity
         return [
             self::CALLBACK_URL_SUCCEEDED,
             self::CALLBACK_URL_FAILED,
-            self::CALLBACK_URL_CANCELED
+            self::CALLBACK_URL_CANCELED,
+            self::CALLBACK_URL_SAVED
         ];
     }
 
@@ -590,5 +576,19 @@ class Payment extends AbstractEntity
         }
 
         return $array;
+    }
+
+    /**
+     * @var mixed $date
+     *
+     * @return \DateTime
+     */
+    protected function parseDate($date)
+    {
+        if (is_string($date)) {
+            return new \DateTime($date);
+        }
+
+        return $date;
     }
 }
