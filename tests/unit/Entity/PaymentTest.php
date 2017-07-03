@@ -254,7 +254,8 @@ class PaymentTest extends Unit
         $this->assertEquals([
             Payment::CALLBACK_URL_SUCCEEDED,
             Payment::CALLBACK_URL_FAILED,
-            Payment::CALLBACK_URL_CANCELED
+            Payment::CALLBACK_URL_CANCELED,
+            Payment::CALLBACK_URL_SAVED
         ], Payment::getCallbackUrlEvents());
     }
 
