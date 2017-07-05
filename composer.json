@@ -30,7 +30,7 @@
     },
     "require": {
         "fei/entities": "^1.0.3",
-        "doctrine/common": "^2.7",
+        "doctrine/common": "~2.6.0",
         "ramsey/uuid": "~3.6"
     },
     "require-dev": {
