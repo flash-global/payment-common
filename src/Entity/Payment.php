@@ -150,7 +150,7 @@ class Payment extends AbstractEntity
      */
     public function __construct($data = null)
     {
-        $this->setUuid((Uuid::uuid4())->toString());
+        $this->setUuid(Uuid::uuid4()->toString());
         $this->setStatus(self::STATUS_PENDING);
         $this->setCreatedAt(new \DateTime());
         $this->setAuthorizedPayment(0);
