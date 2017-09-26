@@ -16,13 +16,8 @@ class PaymentValidatorTest extends Unit
         $this->assertTrue((new PaymentValidator('create'))->validateId(null));
 
         $validator = new PaymentValidator('update');
-        $this->assertFalse($validator->validateId('1'));
-        $this->assertCount(1, $validator->getErrors());
-        $this->assertCount(1, $validator->getErrors()['id']);
-        $this->assertEquals(
-            'The id has to be an integer',
-            reset($validator->getErrors()['id'])
-        );
+        $this->assertTrue($validator->validateId('1'));
+        $this->assertCount(0, $validator->getErrors());
 
         $validator = new PaymentValidator('create');
         $this->assertFalse($validator->validateId(1));
@@ -239,14 +234,9 @@ class PaymentValidatorTest extends Unit
             reset($validator->getErrors()['authorizedPayment'])
         );
 
-        $this->assertFalse($validator->validateAuthorizedPayment('1'));
+        $this->assertTrue($validator->validateAuthorizedPayment('1'));
         $this->assertCount(1, $validator->getErrors());
-        $this->assertCount(2, $validator->getErrors()['authorizedPayment']);
-        $this->assertEquals(
-            'The authorized payment must be an integer',
-            $validator->getErrors()['authorizedPayment'][1]
-        );
-
+ 
         $this->assertTrue((new PaymentValidator('create'))->validateAuthorizedPayment(1));
     }
 

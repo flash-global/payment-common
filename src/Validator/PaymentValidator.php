@@ -67,7 +67,7 @@ class PaymentValidator extends AbstractValidator
      */
     public function validateId($id)
     {
-        if (in_array($this->getContext(), ['update', 'delete']) && !is_integer($id)) {
+        if (in_array($this->getContext(), ['update', 'delete']) && !is_numeric($id)) {
             $this->addError('id', 'The id has to be an integer');
             return false;
         }
@@ -295,7 +295,7 @@ class PaymentValidator extends AbstractValidator
             return false;
         }
 
-        if (!is_integer($authorizedPayments)) {
+        if (!is_numeric($authorizedPayments)) {
             $this->addError(
                 'authorizedPayment',
                 'The authorized payment must be an integer'
@@ -320,7 +320,7 @@ class PaymentValidator extends AbstractValidator
             return true;
         }
 
-        if (!is_integer($selectedPayment)) {
+        if (!is_numeric($selectedPayment)) {
             $this->addError('selectedPayment', 'The selected payment bridge has to be an integer');
 
             return false;
