@@ -30,9 +30,9 @@ In addition to traditional `id` and `createdAt` fields, Payment entity has eleve
 | callbackUrl					| `ArrayCollection` |
 
 * `uuid` is a string representing a unique identifier of the payment entity
-* `createdAt' represent the creation date
-* `payedAt' represent the date when the payment has been made
-* `expirationDate' represent the date when the payment expires
+* `createdAt` represent the creation date
+* `payedAt` represent the date when the payment has been made
+* `expirationDate` represent the date when the payment expires
 * `status` indicate in which status the payment currently is
 * `cancellationReason` is a string representing the reason of the cancellation of the payment
 * `requiredPrice` is a float representing the price required
