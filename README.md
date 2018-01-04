@@ -1,22 +1,15 @@
-# Payment common
+# Service Payment - Common
 
-This is the Payment Common elements package which contains:
-                                       
-* Payment Entity and transformer
-* Payment Entity validator
-* Related classes
+[![GitHub release](https://img.shields.io/github/release/flash-global/payment-common.svg?style=for-the-badge)](README.md)
 
-# Installation and Requirement
-  
-Payment Client needs PHP 5.5 or higher.
+## Table of contents
+- [Entities](#entities)
+- [Validators](#validators)
+- [Contribution](#contribution)
 
-Add this requirement to your `composer.json: "fei/payment-common": : "^1.0"`
+## Entities
 
-Or execute `composer.phar require fei/payment-common` in your terminal.
-
-## Entity and classes
-
-## Payment entity
+### Payment entity
 
 In addition to traditional `id` and `createdAt` fields, Payment entity has eleven important properties:
 
@@ -52,7 +45,7 @@ In addition to traditional `id` and `createdAt` fields, Payment entity has eleve
 	* `failed` : the url that will be called when an payment authorization failed
 	* `cancelled` : the url that will be called when an payment is cancelled 
 
-## Context entity
+### Context entity
 
 In addition to traditional `id` field, Context entity has three important properties:
 
@@ -67,9 +60,9 @@ In addition to traditional `id` field, Context entity has three important proper
 * `value` is a string representing the value attach to this context
 * `payment` is a Payment entity representing the Payment related to this context
 
-## Other tools
 
-### Paylment validator
+## Validators
+
 
 You have the possibility to validate a `Payment` entity with `PaymentValidator` class:
 
@@ -132,50 +125,5 @@ print_r($errors);
 **/
 ```
 
-### Context validator
-
-You have the possibility to validate a `Context` entity with `ContextValidator` class:
-
-```php
-<?php
-
-use Fei\Service\Payment\Validator\ContextValidator;
-use Fei\Service\Payment\Entity\Payment;
-use Fei\Service\Payment\Entity\Context;
-
-$contextValidator = new ContextValidator();
-$payment = new Payment();
-$context = new Context([
-    'key' => 'my_key',
-    'value' => 'my_value',
-    'payment' => $payment
-]);
-
-//validate returns true if your Context instance is valid, or false in the other case
-$isContextValid = $contextValidator->validate($context);
-
-//getErrors() allows you to get an array of errors if there are some, or an empty array in the other case
-$errors = $contextValidator->getErrors();
-```
-
-By default, all `Context` properties must **not** be empty,
-but you're also able to validate only a few properties of your entity, using `validate` methods:
-
-```php
-<?php
-
-use Fei\Service\Payment\Validator\ContextValidator;
-use Fei\Service\Payment\Entity\Context;
-
-$contextValidator = new ContextValidator();
-$context = new Context();
-$context->setKey('key');
-$context->setValue('value');
-
-$contextValidator->validateKey($context->getKey());
-$contextValidator->validateValue($context->getValue());
-
-// will return an empty array : all of our definitions are correct
-$errors = $contextValidator->getErrors();
-echo empty($errors); // true
-```
+## Contribution
+As FEI Service, designed and made by OpCoding. The contribution workflow will involve both technical teams. Feel free to contribute, to improve features and apply patches, but keep in mind to carefully deal with pull request. Merging must be the product of complete discussions between Flash and OpCoding teams :) 
