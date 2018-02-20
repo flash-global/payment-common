@@ -26,7 +26,6 @@ class PaymentPlatformTest extends Unit
         return [
             'id' => ['id', 1],
             'name' => ['name', 'PlatformPayment1'],
-            'createdAt' => ['createdAt', '2018-02-20 12:00:00'],
         ];
     }
 

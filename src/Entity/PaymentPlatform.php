@@ -27,9 +27,6 @@ class PaymentPlatform
     /** @var string  */
     protected $name;
 
-    /** @var string */
-    protected $createdAt;
-
     /** @var bool */
     protected $status;
 
@@ -66,24 +63,6 @@ class PaymentPlatform
     public function setName($name)
     {
         $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param string $createdAt
-     * @return PaymentPlatform
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
         return $this;
     }
 
