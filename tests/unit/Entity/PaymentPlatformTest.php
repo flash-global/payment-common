@@ -29,20 +29,20 @@ class PaymentPlatformTest extends Unit
         ];
     }
 
-    /** @dataProvider dataProviderStatus */
-    public function testIsStatus($status)
+    /** @dataProvider dataProviderEnabled */
+    public function testIsEnabled($enabled)
     {
         $paymentPlatform = new PaymentPlatform();
-        $paymentPlatform->setStatus($status);
+        $paymentPlatform->setEnabled($enabled);
 
-        $this->assertEquals($paymentPlatform->isStatus(), $status);
+        $this->assertEquals($paymentPlatform->isEnabled(), $enabled);
     }
 
-    public function dataProviderStatus()
+    public function dataProviderEnabled()
     {
         return [
-            [PaymentPlatform::STATUS_ENABLED],
-            [PaymentPlatform::STATUS_DISABLED],
+            [true],
+            [false],
         ];
     }
 }

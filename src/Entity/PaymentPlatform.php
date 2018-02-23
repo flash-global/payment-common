@@ -12,9 +12,6 @@ namespace Fei\Service\Payment\Entity;
  */
 class PaymentPlatform
 {
-    const STATUS_ENABLED = 1;
-    const STATUS_DISABLED = 0;
-
     /**
      * @var int
      *
@@ -28,7 +25,7 @@ class PaymentPlatform
     protected $name;
 
     /** @var bool */
-    protected $status;
+    protected $enabled;
 
     /**
      * @return int
@@ -69,18 +66,18 @@ class PaymentPlatform
     /**
      * @return bool
      */
-    public function isStatus()
+    public function isEnabled()
     {
-        return $this->status;
+        return $this->enabled;
     }
 
     /**
-     * @param bool $status
+     * @param bool $enabled
      * @return PaymentPlatform
      */
-    public function setStatus($status)
+    public function setEnabled($enabled)
     {
-        $this->status = $status;
+        $this->enabled = $enabled;
         return $this;
     }
 }
