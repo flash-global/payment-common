@@ -21,19 +21,39 @@ class PlatformConfiguration
      */
     protected $id;
 
-    /** @var integer */
+    /**
+     * @var integer
+     *
+     * @Column(type="integer", name="`platform_id`")
+     */
     protected $platformId;
 
-    /** @var string */
+    /**
+     * @var string
+     *
+     * @Column(type="string", name="`key`")
+     * */
     protected $key;
 
-    /** @var string */
+    /**
+     * @var string
+     *
+     * @Column(type="string", name="`value`")
+     * */
     protected $value;
 
-    /** @var string */
+    /**
+     * @var \DateTime
+     *
+     * @Column(type="datetime", name="`updated_at`")
+     * */
     protected $updatedAt;
 
-    /** @var string */
+    /**
+     * @var string
+     *
+     * @Column(type="string", name="`updated_by`")
+     * */
     protected $updatedBy;
 
     /**

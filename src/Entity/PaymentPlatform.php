@@ -21,10 +21,18 @@ class PaymentPlatform
      */
     protected $id;
 
-    /** @var string  */
+    /**
+     * @var string
+     *
+     * @Column(type="string", name="`name`")
+     */
     protected $name;
 
-    /** @var bool */
+    /**
+     * @var bool
+     *
+     * @Column(type="boolean", name="`enabled`)
+     */
     protected $enabled;
 
     /**
