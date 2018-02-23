@@ -31,7 +31,7 @@ class PaymentPlatform
     /**
      * @var bool
      *
-     * @Column(type="boolean", name="`enabled`)
+     * @Column(type="boolean", name="`enabled`")
      */
     protected $enabled;
 
