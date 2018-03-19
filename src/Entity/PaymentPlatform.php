@@ -2,6 +2,8 @@
 
 namespace Fei\Service\Payment\Entity;
 
+use Fei\Entity\AbstractEntity;
+
 /**
  * Class PaymentPlatform
  *
@@ -10,7 +12,7 @@ namespace Fei\Service\Payment\Entity;
  *
  * @package Fei\Service\Payment\Entity
  */
-class PaymentPlatform
+class PaymentPlatform extends AbstractEntity
 {
     /**
      * @var int
