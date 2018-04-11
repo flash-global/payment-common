@@ -33,6 +33,13 @@ class Payment extends AbstractEntity
     const PAYMENT_OGONE = 4;
     const PAYMENT_PAYZEN = 8;
 
+    const SELECTED_PAYMENT = [
+        'PAYPAL' => Payment::PAYMENT_PAYPAL,
+        'STRIPE' => Payment::PAYMENT_STRIPE,
+        'OGONE' => Payment::PAYMENT_OGONE,
+        'PAYZEN' => Payment::PAYMENT_PAYZEN,
+    ];
+
     // Payment callback URL key
     const CALLBACK_URL_SUCCEEDED = "succeeded";
     const CALLBACK_URL_FAILED    = "failed";
