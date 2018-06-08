@@ -277,6 +277,7 @@ class PaymentTest extends Unit
             ->setAuthorizedPayment(1)
             ->setSelectedPayment(1)
             ->setVat(0.2)
+        ->setOrderId('XX00000')
             ->setContexts(
                 (new Context())
                     ->setKey('key')
