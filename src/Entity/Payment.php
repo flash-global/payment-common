@@ -153,6 +153,13 @@ class Payment extends AbstractEntity
     protected $vat;
 
     /**
+     * @var string
+     *
+     * @Column(type="string", nullable=true)
+     */
+    protected $orderId;
+
+    /**
      * {@inheritdoc}
      */
     public function __construct($data = null)
@@ -184,6 +191,26 @@ class Payment extends AbstractEntity
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
+    }
+
+    /**
+     * @param $orderid
+     *
+     * @return Payment
+     */
+    public function setOrderId($orderid)
+    {
+        $this->orderId = $orderid;
 
         return $this;
     }
