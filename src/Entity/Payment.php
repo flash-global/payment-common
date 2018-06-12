@@ -245,15 +245,6 @@ class Payment extends AbstractEntity
     /**
      * @return string
      */
-    public function getPaymentMethod()
-    {
-        return $this->orderId;
-    }
-
-
-    /**
-     * @return string
-     */
     public function getUuid()
     {
         return $this->uuid;
