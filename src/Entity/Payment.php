@@ -160,6 +160,13 @@ class Payment extends AbstractEntity
     protected $orderId;
 
     /**
+     * @var string
+     *
+     * @Column(type="string", nullable=true)
+     */
+    protected $paymentMethod;
+
+    /**
      * {@inheritdoc}
      */
     public function __construct($data = null)
@@ -214,6 +221,35 @@ class Payment extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+
+    /**
+     * @param $paymentmethod
+     *
+     * @return Payment
+     */
+    public function setPaymentMethod($paymentmethod)
+    {
+        $this->paymentMethod = $paymentmethod;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethod()
+    {
+        return $this->orderId;
+    }
+
 
     /**
      * @return string
