@@ -176,7 +176,7 @@ class PaymentValidator extends AbstractValidator
      */
     public function validatePaymentMethod($method)
     {
-        if (!in_array($method, array_keys(Payment::getMethods()))) {
+        if (!in_array($method, Payment::getMethods())) {
             $this->addError(
                 'method',
                 'The payment method is unknown '
