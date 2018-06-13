@@ -46,6 +46,8 @@ class Payment extends AbstractEntity
     const CALLBACK_URL_CANCELED  = "cancelled";
     const CALLBACK_URL_SAVED  = "saved";
 
+    const PAYMENT_METHOD = [ "", "VISA", "AMEX", "BITCOIN", "CB", "MASTERCARD", "PAYPAL", "VPAY" ];
+
     /**
      * @var int
      *
@@ -545,6 +547,14 @@ class Payment extends AbstractEntity
     {
         $this->vat = $vat;
         return $this;
+    }
+
+     /**
+     * @return array
+     */
+    public static function getMethods()
+    {
+        return self::PAYMENT_METHOD;
     }
 
     /**
