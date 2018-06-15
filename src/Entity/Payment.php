@@ -159,7 +159,7 @@ class Payment extends AbstractEntity
      *
      * @Column(type="string", nullable=true)
      */
-    protected $orderId;
+    protected $order_id;
 
     /**
      * @var string
@@ -209,7 +209,7 @@ class Payment extends AbstractEntity
      */
     public function getOrderId()
     {
-        return $this->orderId;
+        return $this->order_id;
     }
 
     /**
@@ -219,7 +219,7 @@ class Payment extends AbstractEntity
      */
     public function setOrderId($orderid)
     {
-        $this->orderId = $orderid;
+        $this->order_id = $orderid;
 
         return $this;
     }
