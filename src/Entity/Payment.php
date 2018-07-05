@@ -33,21 +33,13 @@ class Payment extends AbstractEntity
     const PAYMENT_OGONE = 4;
     const PAYMENT_PAYZEN = 8;
 
-    const SELECTED_PAYMENT = [
-        'PAYPAL' => Payment::PAYMENT_PAYPAL,
-        'STRIPE' => Payment::PAYMENT_STRIPE,
-        'OGONE' => Payment::PAYMENT_OGONE,
-        'PAYZEN' => Payment::PAYMENT_PAYZEN,
-    ];
-
     // Payment callback URL key
     const CALLBACK_URL_SUCCEEDED = "succeeded";
     const CALLBACK_URL_FAILED    = "failed";
     const CALLBACK_URL_CANCELED  = "cancelled";
     const CALLBACK_URL_SAVED  = "saved";
 
-    const PAYMENT_METHOD = [ "", "VISA", "AMEX", "BITCOIN", "CB", "MASTERCARD", "PAYPAL", "PAYPAL_SB"
-, "VPAY" ];
+    const PAYMENT_METHOD = [ "", "VISA", "AMEX", "BITCOIN", "CB", "MASTERCARD", "PAYPAL", "PAYPAL_SB", "VPAY" ];
 
     /**
      * @var int
@@ -611,6 +603,19 @@ class Payment extends AbstractEntity
             self::CALLBACK_URL_FAILED,
             self::CALLBACK_URL_CANCELED,
             self::CALLBACK_URL_SAVED
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSelectedPaymentId()
+    {
+        return [
+            'PAYPAL' => Payment::PAYMENT_PAYPAL,
+            'STRIPE' => Payment::PAYMENT_STRIPE,
+            'OGONE' => Payment::PAYMENT_OGONE,
+            'PAYZEN' => Payment::PAYMENT_PAYZEN,
         ];
     }
 

@@ -51,6 +51,8 @@ class PaymentTransformerTest extends Unit
             'authorizedPayment' => 1,
             'selectedPayment' => 1,
             'vat' => 0.2,
+            'orderid' => null,
+            'methodPayment' => null,
             'contexts' => [
                 'key' => 'value'
             ],
