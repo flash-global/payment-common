@@ -90,7 +90,4 @@ class PaymentBrand extends AbstractEntity
         $this->css_content = $css_content;
         return $this;
     }
-
-
-
 }

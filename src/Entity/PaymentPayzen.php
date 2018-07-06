@@ -18,11 +18,11 @@ class PaymentPayzen extends AbstractEntity
     //Payzen Status
 
     const STATUS_PAYZEN_PAYMENT = [
-	"AUTHORISED" => Payment::STATUS_AUTHORIZED,
-	"CANCELLED"  => Payment::STATUS_CANCELLED,
-	"REFUSED"    => Payment::STATUS_REFUSED,
-	"CAPTURE_FAILED" => Payment::STATUS_ERRORED,
-	"ABANDONED"	 => Payment::STATUS_ERRORED
+    "AUTHORISED" => Payment::STATUS_AUTHORIZED,
+    "CANCELLED"  => Payment::STATUS_CANCELLED,
+    "REFUSED"    => Payment::STATUS_REFUSED,
+    "CAPTURE_FAILED" => Payment::STATUS_ERRORED,
+    "ABANDONED"  => Payment::STATUS_ERRORED
     ];
 
     /**
@@ -33,5 +33,4 @@ class PaymentPayzen extends AbstractEntity
     {
         return STATUS_PAYZEN_PAYMENT[$value];
     }
-
 }
