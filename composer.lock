@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3cf769d6070552eeebfaa389a38569ff",
+    "content-hash": "1a813a920ef32cdd0c35e9734fb5beef",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -414,7 +414,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://composer.flash.global/dist/fei-entities-1c1bcbd20b7bce230fdc0c186497de6b921fc7d7-zip-5ae878.zip",
+                "url": "https://api.github.com/repos/flash-global/entities/zipball/1c1bcbd20b7bce230fdc0c186497de6b921fc7d7",
                 "reference": "1c1bcbd20b7bce230fdc0c186497de6b921fc7d7",
                 "shasum": "a265d4141cbb1bcf98a8064aa0f3976635e89c00"
             },

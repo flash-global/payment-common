@@ -12,12 +12,6 @@
             "role": "dev"
         }
     ],
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://composer.flash.global"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Fei\\Service\\Payment\\": "src"
