@@ -54,7 +54,7 @@ class PaymentValidator extends AbstractValidator
         $this->validateContexts($entity->getContexts());
         $this->validateCallbackUrl($entity->getCallbackUrl());
         $this->validateVat($entity->getVat());
-	$this->validatePaymentMethod($entity->getPaymentMethod());
+        $this->validatePaymentMethod($entity->getPaymentMethod());
 
         return empty($this->getErrors());
     }

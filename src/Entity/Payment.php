@@ -47,7 +47,7 @@ class Payment extends AbstractEntity
     const CALLBACK_URL_SAVED  = "saved";
 
     const PAYMENT_METHOD = [ "", "VISA", "AMEX", "BITCOIN", "CB", "MASTERCARD", "PAYPAL", "PAYPAL_SB"
-, "VPAY" ];
+    , "VPAY" ];
 
     /**
      * @var int
