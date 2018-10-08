@@ -43,6 +43,7 @@ class PaymentTransformerTest extends Unit
         $this->assertEquals([
             'id' => 1,
             'uuid' => $uuid,
+            'orderId' => 'XX00000',
             'createdAt' => $date->format('c'),
             'payedAt' => $date->format('c'),
             'expirationDate' => $date->format('c'),
@@ -52,6 +53,7 @@ class PaymentTransformerTest extends Unit
             'capturedPrice' => 2,
             'authorizedPayment' => 1,
             'selectedPayment' => 1,
+            'paymentMethod' => Payment::PAYMENT_METHOD_VISA,
             'vat' => 0.2,
             'contexts' => [
                 'key' => 'value'
@@ -59,8 +61,6 @@ class PaymentTransformerTest extends Unit
             'callbackUrl' => [
                 'failed' => 'http://fake-url'
             ],
-            'orderId' => 'XX00000',
-            'paymentMethod' => 'VISA'
         ], $transformer->transform($payment));
     }
 }

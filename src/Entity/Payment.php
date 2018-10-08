@@ -46,8 +46,30 @@ class Payment extends AbstractEntity
     const CALLBACK_URL_CANCELED  = "cancelled";
     const CALLBACK_URL_SAVED  = "saved";
 
-    const PAYMENT_METHOD = [ "", "VISA", "AMEX", "BITCOIN", "CB", "MASTERCARD", "PAYPAL", "PAYPAL_SB", "VPAY" ];
+    const PAYMENT_METHOD_VISA = "VISA";
+    const PAYMENT_METHOD_AMEX = "AMEX";
+    const PAYMENT_METHOD_BITCOIN = "BITCOIN";
+    const PAYMENT_METHOD_CB = "CB";
+    const PAYMENT_METHOD_MASTERCARD = "MASTERCARD";
+    const PAYMENT_METHOD_PAYPAL = "PAYPAL";
+    const PAYMENT_METHOD_PAYPAL_SB = "PAYPAL_SB";
+    const PAYMENT_METHOD_VPAY = "VPAY";
+    const PAYMENT_METHOD_VISA_ELECTRON = "VISA_ELECTRON";
+    const PAYMENT_METHOD_MAESTRO = "MAESTRO";
 
+
+    const PAYMENT_METHOD = [
+        self::PAYMENT_METHOD_VISA,
+        self::PAYMENT_METHOD_AMEX,
+        self::PAYMENT_METHOD_BITCOIN,
+        self::PAYMENT_METHOD_CB,
+        self::PAYMENT_METHOD_MASTERCARD,
+        self::PAYMENT_METHOD_PAYPAL,
+        self::PAYMENT_METHOD_PAYPAL_SB,
+        self::PAYMENT_METHOD_VPAY,
+        self::PAYMENT_METHOD_VISA_ELECTRON,
+        self::PAYMENT_METHOD_MAESTRO,
+    ];
 
     /**
      * @var int
@@ -234,13 +256,13 @@ class Payment extends AbstractEntity
     }
 
     /**
-     * @param $paymentMethod
+     * @param $paymentmethod
      *
      * @return Payment
      */
-    public function setPaymentMethod($paymentMethod): self
+    public function setPaymentMethod($paymentmethod)
     {
-        $this->paymentMethod = $paymentMethod;
+        $this->paymentMethod = $paymentmethod;
 
         return $this;
     }
@@ -611,6 +633,19 @@ class Payment extends AbstractEntity
             self::CALLBACK_URL_FAILED,
             self::CALLBACK_URL_CANCELED,
             self::CALLBACK_URL_SAVED
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getSelectedPaymentId()
+    {
+        return [
+            'PAYPAL' => Payment::PAYMENT_PAYPAL,
+            'STRIPE' => Payment::PAYMENT_STRIPE,
+            'OGONE' => Payment::PAYMENT_OGONE,
+            'PAYZEN' => Payment::PAYMENT_PAYZEN,
         ];
     }
 

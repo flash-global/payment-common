@@ -300,6 +300,8 @@ class PaymentTest extends Unit
             'authorizedPayment' => 1,
             'selectedPayment' => 1,
             'vat' => 0.2,
+            'orderId' => 'XX00000',
+            'paymentMethod' => null,
             'contexts' => [
                 'key' => 'value'
             ],

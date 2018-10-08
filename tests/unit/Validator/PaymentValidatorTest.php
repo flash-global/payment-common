@@ -236,7 +236,7 @@ class PaymentValidatorTest extends Unit
 
         $this->assertTrue($validator->validateAuthorizedPayment('1'));
         $this->assertCount(1, $validator->getErrors());
- 
+
         $this->assertTrue((new PaymentValidator('create'))->validateAuthorizedPayment(1));
     }
 
@@ -425,6 +425,7 @@ class PaymentValidatorTest extends Unit
             'validateContexts' => true,
             'validateCallbackUrl' => true,
             'validateVat' => true,
+            'validatePaymentMethod' => true,
             'getError' => []
         ]);
 
