@@ -425,7 +425,6 @@ class PaymentValidatorTest extends Unit
             'validateContexts' => true,
             'validateCallbackUrl' => true,
             'validateVat' => true,
-            'validatePaymentMethod' => true,
             'getError' => []
         ]);
 

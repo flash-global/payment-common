@@ -54,7 +54,6 @@ class PaymentValidator extends AbstractValidator
         $this->validateContexts($entity->getContexts());
         $this->validateCallbackUrl($entity->getCallbackUrl());
         $this->validateVat($entity->getVat());
-        $this->validatePaymentMethod($entity->getPaymentMethod(), true);
 
         return empty($this->getErrors());
     }
@@ -164,30 +163,6 @@ class PaymentValidator extends AbstractValidator
             return false;
         }
 
-        return true;
-    }
-
-     /**
-     * Validate methods
-     *
-     * @param string|null $method
-     *
-     * @return bool
-     */
-    public function validatePaymentMethod($method, bool $nullable = true): bool
-    {
-        if ($nullable && !$method) {
-            return true;
-        }
-
-        if (!in_array($method, Payment::getMethods())) {
-            $this->addError(
-                'method',
-                'The payment method is unknown '
-            );
-
-            return false;
-        }
         return true;
     }
 
