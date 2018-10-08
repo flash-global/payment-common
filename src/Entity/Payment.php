@@ -56,6 +56,7 @@ class Payment extends AbstractEntity
     const PAYMENT_METHOD_VPAY = "VPAY";
     const PAYMENT_METHOD_VISA_ELECTRON = "VISA_ELECTRON";
     const PAYMENT_METHOD_MAESTRO = "MAESTRO";
+    const PAYMENT_METHOD_E_CARTEBLEUE = "E-CARTEBLEUE";
 
 
     const PAYMENT_METHOD = [
@@ -69,6 +70,7 @@ class Payment extends AbstractEntity
         self::PAYMENT_METHOD_VPAY,
         self::PAYMENT_METHOD_VISA_ELECTRON,
         self::PAYMENT_METHOD_MAESTRO,
+        self::PAYMENT_METHOD_E_CARTEBLEUE
     ];
 
     /**
