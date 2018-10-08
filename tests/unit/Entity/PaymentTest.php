@@ -285,7 +285,7 @@ class PaymentTest extends Unit
             )
             ->setCallbackUrl([
                 'failed' => 'http://fake-url'
-            ]);
+            ])->setPaymentMethod('VISA');
 
         $this->assertEquals([
             'id' => 1,
@@ -300,7 +300,7 @@ class PaymentTest extends Unit
             'authorizedPayment' => 1,
             'selectedPayment' => 1,
             'vat' => 0.2,
-            'order_id' => 'XX00000',
+            'orderId' => 'XX00000',
             'paymentMethod' => null,
             'contexts' => [
                 'key' => 'value'
@@ -308,6 +308,8 @@ class PaymentTest extends Unit
             'callbackUrl' => [
                 'failed' => 'http://fake-url'
             ],
+            'orderId' => 'XX00000',
+            'paymentMethod' => 'VISA'
         ], $payment->toArray());
     }
 

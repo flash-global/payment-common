@@ -17,6 +17,7 @@ class PaymentTransformerTest extends Unit
         $payment = new Payment();
         $payment->setId(1)
             ->setUuid($uuid)
+            ->setOrderId('XX00000')
             ->setCreatedAt($date)
             ->setPayedAt($date)
             ->setExpirationDate($date)
@@ -34,13 +35,15 @@ class PaymentTransformerTest extends Unit
             )
             ->setCallbackUrl([
                 'failed' => 'http://fake-url'
-            ]);
+            ])
+            ->setPaymentMethod('VISA');
 
         $transformer = new PaymentTransformer();
 
         $this->assertEquals([
             'id' => 1,
             'uuid' => $uuid,
+            'orderId' => 'XX00000',
             'createdAt' => $date->format('c'),
             'payedAt' => $date->format('c'),
             'expirationDate' => $date->format('c'),
@@ -50,9 +53,8 @@ class PaymentTransformerTest extends Unit
             'capturedPrice' => 2,
             'authorizedPayment' => 1,
             'selectedPayment' => 1,
+            'paymentMethod' => Payment::PAYMENT_METHOD_VISA,
             'vat' => 0.2,
-            'orderid' => null,
-            'methodPayment' => null,
             'contexts' => [
                 'key' => 'value'
             ],

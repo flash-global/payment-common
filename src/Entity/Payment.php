@@ -33,13 +33,43 @@ class Payment extends AbstractEntity
     const PAYMENT_OGONE = 4;
     const PAYMENT_PAYZEN = 8;
 
+    const SELECTED_PAYMENT = [
+        'PAYPAL' => Payment::PAYMENT_PAYPAL,
+        'STRIPE' => Payment::PAYMENT_STRIPE,
+        'OGONE' => Payment::PAYMENT_OGONE,
+        'PAYZEN' => Payment::PAYMENT_PAYZEN,
+    ];
+
     // Payment callback URL key
     const CALLBACK_URL_SUCCEEDED = "succeeded";
     const CALLBACK_URL_FAILED    = "failed";
     const CALLBACK_URL_CANCELED  = "cancelled";
     const CALLBACK_URL_SAVED  = "saved";
 
-    const PAYMENT_METHOD = [ "", "VISA", "AMEX", "BITCOIN", "CB", "MASTERCARD", "PAYPAL", "PAYPAL_SB", "VPAY" ];
+    const PAYMENT_METHOD_VISA = "VISA";
+    const PAYMENT_METHOD_AMEX = "AMEX";
+    const PAYMENT_METHOD_BITCOIN = "BITCOIN";
+    const PAYMENT_METHOD_CB = "CB";
+    const PAYMENT_METHOD_MASTERCARD = "MASTERCARD";
+    const PAYMENT_METHOD_PAYPAL = "PAYPAL";
+    const PAYMENT_METHOD_PAYPAL_SB = "PAYPAL_SB";
+    const PAYMENT_METHOD_VPAY = "VPAY";
+    const PAYMENT_METHOD_VISA_ELECTRON = "VISA_ELECTRON";
+    const PAYMENT_METHOD_MAESTRO = "MAESTRO";
+
+
+    const PAYMENT_METHOD = [
+        self::PAYMENT_METHOD_VISA,
+        self::PAYMENT_METHOD_AMEX,
+        self::PAYMENT_METHOD_BITCOIN,
+        self::PAYMENT_METHOD_CB,
+        self::PAYMENT_METHOD_MASTERCARD,
+        self::PAYMENT_METHOD_PAYPAL,
+        self::PAYMENT_METHOD_PAYPAL_SB,
+        self::PAYMENT_METHOD_VPAY,
+        self::PAYMENT_METHOD_VISA_ELECTRON,
+        self::PAYMENT_METHOD_MAESTRO,
+    ];
 
     /**
      * @var int
@@ -152,7 +182,7 @@ class Payment extends AbstractEntity
      *
      * @Column(type="string", nullable=true)
      */
-    protected $order_id;
+    protected $orderId;
 
     /**
      * @var string
@@ -202,7 +232,7 @@ class Payment extends AbstractEntity
      */
     public function getOrderId()
     {
-        return $this->order_id;
+        return $this->orderId;
     }
 
     /**
@@ -212,7 +242,7 @@ class Payment extends AbstractEntity
      */
     public function setOrderId($orderid)
     {
-        $this->order_id = $orderid;
+        $this->orderId = $orderid;
 
         return $this;
     }
