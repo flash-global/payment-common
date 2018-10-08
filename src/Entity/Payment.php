@@ -46,8 +46,8 @@ class Payment extends AbstractEntity
     const CALLBACK_URL_CANCELED  = "cancelled";
     const CALLBACK_URL_SAVED  = "saved";
 
-    const PAYMENT_METHOD = [ "", "VISA", "AMEX", "BITCOIN", "CB", "MASTERCARD", "PAYPAL", "PAYPAL_SB"
-, "VPAY" ];
+    const PAYMENT_METHOD = [ "", "VISA", "AMEX", "BITCOIN", "CB", "MASTERCARD", "PAYPAL", "PAYPAL_SB", "VPAY" ];
+
 
     /**
      * @var int
@@ -160,7 +160,7 @@ class Payment extends AbstractEntity
      *
      * @Column(type="string", nullable=true)
      */
-    protected $order_id;
+    protected $orderId;
 
     /**
      * @var string
@@ -210,7 +210,7 @@ class Payment extends AbstractEntity
      */
     public function getOrderId()
     {
-        return $this->order_id;
+        return $this->orderId;
     }
 
     /**
@@ -220,7 +220,7 @@ class Payment extends AbstractEntity
      */
     public function setOrderId($orderid)
     {
-        $this->order_id = $orderid;
+        $this->orderId = $orderid;
 
         return $this;
     }
@@ -234,13 +234,13 @@ class Payment extends AbstractEntity
     }
 
     /**
-     * @param $paymentmethod
+     * @param $paymentMethod
      *
      * @return Payment
      */
-    public function setPaymentMethod($paymentmethod)
+    public function setPaymentMethod($paymentMethod): self
     {
-        $this->paymentMethod = $paymentmethod;
+        $this->paymentMethod = $paymentMethod;
 
         return $this;
     }

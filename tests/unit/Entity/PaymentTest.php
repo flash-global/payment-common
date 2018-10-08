@@ -277,7 +277,7 @@ class PaymentTest extends Unit
             ->setAuthorizedPayment(1)
             ->setSelectedPayment(1)
             ->setVat(0.2)
-        ->setOrderId('XX00000')
+            ->setOrderId('XX00000')
             ->setContexts(
                 (new Context())
                     ->setKey('key')
@@ -285,7 +285,9 @@ class PaymentTest extends Unit
             )
             ->setCallbackUrl([
                 'failed' => 'http://fake-url'
-            ]);
+            ])->setPaymentMethod('VISA');
+
+        codecept_debug($payment->toArray());
 
         $this->assertEquals([
             'id' => 1,
@@ -306,6 +308,8 @@ class PaymentTest extends Unit
             'callbackUrl' => [
                 'failed' => 'http://fake-url'
             ],
+            'orderId' => 'XX00000',
+            'paymentMethod' => 'VISA'
         ], $payment->toArray());
     }
 

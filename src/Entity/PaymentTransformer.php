@@ -24,7 +24,7 @@ class PaymentTransformer extends TransformerAbstract
         return [
             'id' => (int)$payment->getId(),
             'uuid' => $payment->getUuid(),
-            'orderid' => $payment->getOrderId(),
+            'orderId' => $payment->getOrderId(),
             'createdAt' => $payment->getCreatedAt()->format('c'),
             'payedAt' => ($payedAt instanceof \DateTime) ? $payedAt->format('c') : $payedAt,
             'expirationDate' => $payment->getExpirationDate()->format('c'),
@@ -34,7 +34,7 @@ class PaymentTransformer extends TransformerAbstract
             'capturedPrice' => $payment->getCapturedPrice(),
             'authorizedPayment' => $payment->getAuthorizedPayment(),
             'selectedPayment' => $payment->getSelectedPayment(),
-            'methodPayment' => $payment->getPaymentMethod(),
+            'paymentMethod' => $payment->getPaymentMethod(),
             'vat' => $payment->getVat(),
             'contexts' => $contextItems,
             'callbackUrl' => $payment->getCallbackUrl()

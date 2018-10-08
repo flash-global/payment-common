@@ -17,6 +17,7 @@ class PaymentTransformerTest extends Unit
         $payment = new Payment();
         $payment->setId(1)
             ->setUuid($uuid)
+            ->setOrderId('XX00000')
             ->setCreatedAt($date)
             ->setPayedAt($date)
             ->setExpirationDate($date)
@@ -34,7 +35,8 @@ class PaymentTransformerTest extends Unit
             )
             ->setCallbackUrl([
                 'failed' => 'http://fake-url'
-            ]);
+            ])
+            ->setPaymentMethod('VISA');
 
         $transformer = new PaymentTransformer();
 
@@ -57,6 +59,8 @@ class PaymentTransformerTest extends Unit
             'callbackUrl' => [
                 'failed' => 'http://fake-url'
             ],
+            'orderId' => 'XX00000',
+            'paymentMethod' => 'VISA'
         ], $transformer->transform($payment));
     }
 }

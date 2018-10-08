@@ -19,11 +19,11 @@
     },
     "config": {
       "platform": {
-        "php": "5.5"
+        "php": "7.0"
       }
     },
     "require": {
-        "php": ">=5.5",
+        "php": ">=7.0",
         "fei/entities": "^1.0.3",
         "doctrine/common": "~2.6.0",
         "ramsey/uuid": "~3.6"
