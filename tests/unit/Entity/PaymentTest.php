@@ -287,8 +287,6 @@ class PaymentTest extends Unit
                 'failed' => 'http://fake-url'
             ])->setPaymentMethod('VISA');
 
-        codecept_debug($payment->toArray());
-
         $this->assertEquals([
             'id' => 1,
             'uuid' => $uuid,
