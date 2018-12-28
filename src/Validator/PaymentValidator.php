@@ -239,12 +239,6 @@ class PaymentValidator extends AbstractValidator
             return false;
         }
 
-        if ($requiredPrice < 0) {
-            $this->addError('requiredPrice', 'The required price must be higher or equal to 0');
-
-            return false;
-        }
-
         return true;
     }
 
@@ -258,21 +252,26 @@ class PaymentValidator extends AbstractValidator
      */
     public function validateCapturedPrice($capturedPrice, $payment)
     {
+        if ($capturedPrice === null) {
+            return true;
+        }
+
         if ($capturedPrice !== null && !is_numeric($capturedPrice)) {
             $this->addError('capturedPrice', 'The captured price must be numeric');
 
             return false;
         }
 
-        if ($capturedPrice < 0) {
-            $this->addError('capturedPrice', 'The captured price must be higher or equal to 0');
+        $requiredPrice = $payment->getRequiredPrice();
+
+        if ($requiredPrice >= 0 && $requiredPrice < $capturedPrice) {
+            $this->addError('capturedPrice', 'The captured price must be lower or equal to the required price');
 
             return false;
         }
 
-        $requiredPrice = $payment->getRequiredPrice();
-        if ($requiredPrice < $capturedPrice) {
-            $this->addError('capturedPrice', 'The captured price must be lower or equal to the required price');
+        if ($requiredPrice < 0 && $requiredPrice > $capturedPrice) {
+            $this->addError('capturedPrice', 'The captured price must be greater or equal to the required price');
 
             return false;
         }

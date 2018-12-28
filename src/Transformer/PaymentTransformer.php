@@ -1,6 +1,9 @@
 <?php
-namespace Fei\Service\Payment\Entity;
 
+namespace Fei\Service\Payment\Transformer;
+
+use Fei\Service\Payment\Entity\Context;
+use Fei\Service\Payment\Entity\Payment;
 use League\Fractal\TransformerAbstract;
 
 /**
@@ -37,7 +40,9 @@ class PaymentTransformer extends TransformerAbstract
             'paymentMethod' => $payment->getPaymentMethod(),
             'vat' => $payment->getVat(),
             'contexts' => $contextItems,
-            'callbackUrl' => $payment->getCallbackUrl()
+            'callbackUrl' => $payment->getCallbackUrl(),
+            'refundedPrice' => $payment->getRefundedPrice(),
+            'refundPayment' => $payment->getRefundPayment() ? $this->transform($payment->getRefundPayment()) : null
         ];
     }
 }

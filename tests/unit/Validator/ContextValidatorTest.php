@@ -1,14 +1,13 @@
 <?php
-namespace Tests\Fei\Service\Payment\Entity;
+
+namespace Tests\Fei\Service\Payment\Validator;
 
 use Codeception\Test\Unit;
 use Codeception\Util\Stub;
-use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Payment\Entity\Context;
 use Fei\Service\Payment\Entity\Payment;
 use Fei\Service\Payment\Validator\ContextValidator;
 use Fei\Service\Payment\Validator\PaymentValidator;
-use Ramsey\Uuid\Uuid;
 
 class ContextValidatorTest extends Unit
 {

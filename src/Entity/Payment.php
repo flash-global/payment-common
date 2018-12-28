@@ -58,7 +58,6 @@ class Payment extends AbstractEntity
     const PAYMENT_METHOD_MAESTRO = "MAESTRO";
     const PAYMENT_METHOD_E_CARTEBLEUE = "E-CARTEBLEUE";
 
-
     const PAYMENT_METHOD = [
         self::PAYMENT_METHOD_VISA,
         self::PAYMENT_METHOD_AMEX,
@@ -192,6 +191,18 @@ class Payment extends AbstractEntity
      * @Column(type="string", nullable=true)
      */
     protected $paymentMethod;
+
+    /**
+     * @var Payment
+     *
+     * @ManyToOne(targetEntity="Payment")
+     */
+    protected $refundPayment;
+
+    /**
+     * @var float
+     */
+    protected $refundedPrice = 0;
 
     /**
      * {@inheritdoc}
@@ -574,6 +585,54 @@ class Payment extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Get RefundPayment
+     *
+     * @return Payment
+     */
+    public function getRefundPayment()
+    {
+        return $this->refundPayment;
+    }
+
+    /**
+     * Set RefundPayment
+     *
+     * @param Payment $refundPayment
+     *
+     * @return $this
+     */
+    public function setRefundPayment(Payment $refundPayment = null)
+    {
+        $this->refundPayment = $refundPayment;
+
+        return $this;
+    }
+
+    /**
+     * Get RefundedPrice
+     *
+     * @return float
+     */
+    public function getRefundedPrice(): float
+    {
+        return $this->refundedPrice;
+    }
+
+    /**
+     * Set RefundedPrice
+     *
+     * @param float $refundedPrice
+     *
+     * @return $this
+     */
+    public function setRefundedPrice($refundedPrice)
+    {
+        $this->refundedPrice = (float) $refundedPrice;
+
+        return $this;
+    }
+
      /**
      * @return array
      */
@@ -669,6 +728,10 @@ class Payment extends AbstractEntity
                     $value = $value->format('c');
                 }
 
+                if ($value instanceof Payment) {
+                    $value = $value->toArray();
+                }
+
                 if ($property === 'contexts') {
                     $tmpValue = [];
 
@@ -685,6 +748,15 @@ class Payment extends AbstractEntity
         }
 
         return $array;
+    }
+
+    public function hydrate($data)
+    {
+        if (isset($data['refundPayment']) && is_array($data['refundPayment'])) {
+            $data['refundPayment'] = new Payment($data['refundPayment']);
+        }
+
+        return parent::hydrate($data);
     }
 
     /**

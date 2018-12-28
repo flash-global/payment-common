@@ -64,7 +64,8 @@ class PaymentBrand extends AbstractEntity
     }
 
     /**
-     * @param string $name
+     * @param string $logo_url
+     *
      * @return PaymentBrand
      */
     public function setLogoUrl($logo_url)
@@ -82,7 +83,8 @@ class PaymentBrand extends AbstractEntity
     }
 
     /**
-     * @param string $name
+     * @param string $css_content
+     *
      * @return PaymentBrand
      */
     public function setCssContent($css_content)

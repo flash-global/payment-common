@@ -1,5 +1,6 @@
 <?php
-namespace Tests\Fei\Service\Payment\Entity;
+
+namespace Tests\Fei\Service\Payment\Validator;
 
 use Codeception\Test\Unit;
 use Codeception\Util\Stub;
@@ -177,13 +178,7 @@ class PaymentValidatorTest extends Unit
             $validator->getErrors()['requiredPrice'][1]
         );
 
-        $this->assertFalse($validator->validateRequiredPrice(-10));
-        $this->assertCount(1, $validator->getErrors());
-        $this->assertCount(3, $validator->getErrors()['requiredPrice']);
-        $this->assertEquals(
-            'The required price must be higher or equal to 0',
-            $validator->getErrors()['requiredPrice'][2]
-        );
+        $this->assertTrue($validator->validateRequiredPrice(-10));
 
         $this->assertTrue((new PaymentValidator('create'))->validateRequiredPrice(10));
     }
@@ -204,20 +199,14 @@ class PaymentValidatorTest extends Unit
             reset($validator->getErrors()['capturedPrice'])
         );
 
-        $this->assertFalse($validator->validateCapturedPrice(-10, $payment));
-        $this->assertCount(1, $validator->getErrors());
-        $this->assertCount(2, $validator->getErrors()['capturedPrice']);
-        $this->assertEquals(
-            'The captured price must be higher or equal to 0',
-            $validator->getErrors()['capturedPrice'][1]
-        );
+        $this->assertTrue($validator->validateCapturedPrice(-10, $payment));
 
         $this->assertFalse($validator->validateCapturedPrice(11, $payment));
         $this->assertCount(1, $validator->getErrors());
-        $this->assertCount(3, $validator->getErrors()['capturedPrice']);
+        $this->assertCount(2, $validator->getErrors()['capturedPrice']);
         $this->assertEquals(
             'The captured price must be lower or equal to the required price',
-            $validator->getErrors()['capturedPrice'][2]
+            $validator->getErrors()['capturedPrice'][1]
         );
 
         $this->assertTrue((new PaymentValidator('create'))->validateCapturedPrice(5, $payment));
@@ -232,6 +221,12 @@ class PaymentValidatorTest extends Unit
         $this->assertEquals(
             'The authorized payment bridges cannot be empty',
             reset($validator->getErrors()['authorizedPayment'])
+        );
+
+        $this->assertFalse($validator->validateAuthorizedPayment('test'));
+        $this->assertEquals(
+            'The authorized payment must be an integer',
+            $validator->getErrors()['authorizedPayment'][1]
         );
 
         $this->assertTrue($validator->validateAuthorizedPayment('1'));
