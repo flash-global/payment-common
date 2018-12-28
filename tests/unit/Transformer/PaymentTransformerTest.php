@@ -1,10 +1,11 @@
 <?php
-namespace Tests\Fei\Service\Payment\Entity;
+
+namespace Tests\Fei\Service\Payment\Transformer;
 
 use Codeception\Test\Unit;
 use Fei\Service\Payment\Entity\Context;
 use Fei\Service\Payment\Entity\Payment;
-use Fei\Service\Payment\Entity\PaymentTransformer;
+use Fei\Service\Payment\Transformer\PaymentTransformer;
 use Ramsey\Uuid\Uuid;
 
 class PaymentTransformerTest extends Unit
@@ -61,6 +62,8 @@ class PaymentTransformerTest extends Unit
             'callbackUrl' => [
                 'failed' => 'http://fake-url'
             ],
+            'refundedPrice' => 0.0,
+            'refundPayment' => null
         ], $transformer->transform($payment));
     }
 }

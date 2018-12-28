@@ -309,7 +309,9 @@ class PaymentTest extends Unit
                 'failed' => 'http://fake-url'
             ],
             'orderId' => 'XX00000',
-            'paymentMethod' => 'VISA'
+            'paymentMethod' => 'VISA',
+            'refundPayment' => null,
+            'refundedPrice' => 0.0
         ], $payment->toArray());
     }
 
